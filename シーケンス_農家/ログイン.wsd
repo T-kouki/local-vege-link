@@ -35,7 +35,7 @@ deactivate ログイン
 activate 入力が誤り
 入力が誤り --> ログイン画面:2.4:「メールアドレスまたはパスワードが誤りです」と表示()
 deactivate ログイン画面
-deactivate 入力が誤り
+deactivate 入力が誤り:2.5:本当にそうかな？
 
 end
 
