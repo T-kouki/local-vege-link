@@ -6,7 +6,7 @@ control 出品管理画面表示
 entity 商品DB
 boundary 出品管理閲覧画面
 
-activate 農家ああああああああ
+activate 農家
 農家 -> メニュー画面:1:出品管理ボタンを押下する
 activate メニュー画面
 メニュー画面 -> 出品管理画面表示:1.1:起動()
