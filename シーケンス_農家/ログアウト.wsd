@@ -7,7 +7,7 @@ boundary ログアウト画面
 control ログアウト
 boundary ログイン済みメニュー画面
 
-activate 農家
+activate 農家 aaa
 農家 -> メニュー画面:1:ログアウトボタンを押下する
 activate メニュー画面
 メニュー画面 -> ログアウト画面:1.1:表示()
