@@ -1,0 +1,32 @@
+売上管理
+@startuml
+actor 農家
+boundary メニュー画面
+control 売上管理画面表示
+entity 売上管理DB
+boundary 売上管理画面
+
+activate 農家
+農家 -> メニュー画面:1:売上管理ボタンを押下する
+activate メニュー画面
+メニュー画面 -> 売上管理画面表示:1.1:起動()
+deactivate メニュー画面
+activate 売上管理画面表示
+
+売上管理画面表示 -> 売上管理DB:1.2:売上情報を取得()
+activate 売上管理DB
+売上管理DB --> 売上管理画面表示
+deactivate 売上管理DB
+
+alt 完了時
+売上管理画面表示 -> 売上管理画面:1.3:売上金額・税率を計算して表示()
+activate 売上管理画面
+
+else 売れた商品がまだない場合
+売上管理画面表示 -> 売上管理画面:1.4:「売れた商品がありません」と表示()
+deactivate 売上管理画面表示
+deactivate 売上管理画面
+end
+
+
+@enduml

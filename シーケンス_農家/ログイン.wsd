@@ -1,0 +1,42 @@
+ログイン
+@startuml
+actor 農家
+boundary 未ログインメニュー画面
+boundary ログイン画面
+control ログイン
+entity ユーザーDB
+control 入力が誤り
+boundary ログイン済みメニュー画面
+
+
+activate 農家
+農家 -> 未ログインメニュー画面:1:ログインまたは新規登録ボタンを押下する
+activate 未ログインメニュー画面
+未ログインメニュー画面 -> ログイン画面:1.1:表示()
+deactivate 未ログインメニュー画面
+activate ログイン画面
+
+農家 -> ログイン画面:2:メールアドレスとパスワードを入力し、ログインを押下する
+ログイン画面 -> ログイン:2.1:起動()
+activate ログイン
+
+alt 完了時
+ログイン -> ユーザーDB:2.2:ログイン情報の取得()
+activate ユーザーDB
+ユーザーDB --> ログイン
+deactivate ユーザーDB
+ログイン -> ログイン済みメニュー画面:2.3:表示()
+activate ログイン済みメニュー画面
+deactivate ログイン済みメニュー画面
+
+else メールアドレスまたはパスワードが誤りの場合
+ログイン -> 入力が誤り
+deactivate ログイン
+activate 入力が誤り
+入力が誤り --> ログイン画面:2.4:「メールアドレスまたはパスワードが誤りです」と表示()
+deactivate ログイン画面
+deactivate 入力が誤り
+
+end
+
+@enduml

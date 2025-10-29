@@ -1,0 +1,50 @@
+出品管理変更
+@startuml
+actor 農家
+boundary メニュー画面
+control 出品管理画面表示
+entity 商品DB
+boundary 出品管理閲覧画面
+boundary 出品管理変更画面
+control 表示
+boundary 変更完了画面
+
+activate 農家
+農家 -> メニュー画面:1:出品管理ボタンを押下する
+activate メニュー画面
+メニュー画面 -> 出品管理画面表示:1.1:起動()
+deactivate メニュー画面
+activate 出品管理画面表示
+
+出品管理画面表示 -> 商品DB:1.2:出品情報を取得()
+activate 商品DB
+商品DB --> 出品管理画面表示
+
+alt 完了時
+出品管理画面表示 -> 出品管理閲覧画面:1.3:表示()
+activate 出品管理閲覧画面
+
+else 商品が出品されていない場合
+出品管理画面表示 -> 出品管理閲覧画面:1.4:「商品が出品されていません」と表示()
+deactivate 出品管理画面表示
+end
+
+農家 -> 出品管理閲覧画面:2:変更ボタンを押下する
+出品管理閲覧画面 -> 出品管理変更画面:2.1:表示()
+deactivate 出品管理閲覧画面
+activate 出品管理変更画面
+
+
+農家 -> 出品管理変更画面:3:新しい写真と出品名、説明を入力
+出品管理変更画面 -> 表示:2.2:起動()
+activate 表示
+表示 -> 商品DB:2.3:商品の変更()
+商品DB --> 表示
+deactivate 商品DB
+表示 -> 変更完了画面:2.4:「商品の変更が完了しました」と表示()
+deactivate 表示
+activate 変更完了画面
+deactivate 出品管理変更画面
+deactivate 変更完了画面
+
+@enduml

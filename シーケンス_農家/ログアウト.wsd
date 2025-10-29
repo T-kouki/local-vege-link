@@ -1,0 +1,33 @@
+ログアウト
+@startuml
+
+actor 農家
+boundary メニュー画面
+boundary ログアウト画面
+control ログアウト
+boundary ログイン済みメニュー画面
+
+activate 農家
+農家 -> メニュー画面:1:ログアウトボタンを押下する
+activate メニュー画面
+メニュー画面 -> ログアウト画面:1.1:表示()
+activate ログアウト画面
+
+農家 -> ログアウト画面:2:画面の「はい」か「いいえ」を選択
+ログアウト画面 -> ログアウト:2.1:起動()
+deactivate ログアウト画面
+activate ログアウト
+
+
+alt はいの場合
+  ログアウト -> ログイン済みメニュー画面:2.2:表示()
+  activate ログイン済みメニュー画面
+  deactivate ログイン済みメニュー画面
+
+else いいえの場合
+  ログアウト -> メニュー画面:2.3:「未記入の欄があります」表示()
+  deactivate ログアウト
+  deactivate メニュー画面
+end
+
+@enduml

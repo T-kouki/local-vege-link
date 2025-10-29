@@ -1,0 +1,33 @@
+出品履歴
+@startuml
+actor 農家
+boundary メニュー画面
+control 出品履歴画面表示
+entity ユーザーDB
+boundary 出品履歴画面
+
+activate 農家
+農家 -> メニュー画面:1:出品履歴ボタンを押下する
+activate メニュー画面
+メニュー画面 -> 出品履歴画面表示:1.1:起動()
+deactivate メニュー画面
+activate 出品履歴画面表示
+
+出品履歴画面表示 -> ユーザーDB:1.2:プロフィール情報を取得()
+activate ユーザーDB
+ユーザーDB --> 出品履歴画面表示
+deactivate ユーザーDB
+
+alt 完了時
+出品履歴画面表示 -> 出品履歴画面:1.3:表示()
+activate 出品履歴画面
+
+else 出品履歴がない場合
+出品履歴画面表示 -> 出品履歴画面:1.4:「出品履歴がありません」と表示()
+deactivate 出品履歴画面表示
+deactivate 出品履歴画面
+end
+
+
+
+@enduml

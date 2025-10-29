@@ -1,0 +1,45 @@
+農家商品掲示
+@startuml
+actor 農家
+boundary メニュー画面
+control 商品投稿画面表示
+entity 商品DB
+boundary 商品投稿画面
+control 表示
+boundary 投稿完了
+
+activate 農家
+農家 -> メニュー画面:1:商品掲示ボタンを押下する
+activate メニュー画面
+メニュー画面 -> 商品投稿画面表示:1.1:起動()
+deactivate メニュー画面
+activate 商品投稿画面表示
+商品投稿画面表示 -> 商品DB:1.2:商品情報を取得()
+activate 商品DB
+商品DB --> 商品投稿画面表示
+商品投稿画面表示 -> 商品投稿画面:1.2:表示()
+deactivate 商品投稿画面表示
+activate 商品投稿画面
+
+農家 -> 商品投稿画面:2:写真のアップデート、商品名、説明文の入力
+商品投稿画面 -> 表示:2.1:起動()
+activate 表示
+
+alt 完了時
+  表示 -> 商品DB:2.2:情報を保存()
+  商品DB --> 表示
+  deactivate 商品DB
+  表示 -> 投稿完了:2.3:表示()
+  activate 投稿完了
+  deactivate 投稿完了
+
+else 商品名を入力していない場合
+  表示 -> 商品投稿画面:2.4:「値段を入力してください」と表示()
+
+else 値段を入力していない場合
+  表示-> 商品投稿画面:2.5:「商品名を入力してください」と表示()
+  deactivate 表示
+  deactivate 商品投稿画面
+end
+
+@enduml
