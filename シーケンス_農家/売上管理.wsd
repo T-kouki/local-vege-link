@@ -6,7 +6,7 @@ control 売上管理画面表示
 entity 売上管理DB
 boundary 売上管理画面
 
-activate 農家
+activate 農家 konnnitiha
 農家 -> メニュー画面:1:売上管理ボタンを押下する
 activate メニュー画面
 メニュー画面 -> 売上管理画面表示:1.1:起動()
