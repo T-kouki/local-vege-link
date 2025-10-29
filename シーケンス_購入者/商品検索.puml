@@ -1,0 +1,29 @@
+@startuml
+
+actor 購入者
+boundary メニュー画面
+boundary 検索画面
+control 検索
+entity 商品DB
+boundary 商品表示画面
+
+activate 購入者
+購入者 -> メニュー画面: 1:検索ボタンを押下する
+activate メニュー画面
+メニュー画面 -> 検索画面: 1.1:表示()
+deactivate メニュー画面
+activate 検索画面
+購入者 -> 検索画面 : 2:商品名を入力
+検索画面 -> 検索 :2.1:検索()
+activate 検索
+検索 -> 商品DB:2.2:入力情報を取得()
+activate 商品DB
+商品DB --> 検索:
+deactivate 商品DB
+alt 正常時
+    検索 -> 商品表示画面: 2.3:表示()
+    activate 商品表示画面
+else 商品名に該当する商品が存在しない場合
+    検索 -> 検索画面:2.2.1:「この商品に該当する商品はありません。」と表示()
+end
+@enduml

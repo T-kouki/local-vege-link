@@ -1,0 +1,25 @@
+@startuml
+
+actor 購入者
+boundary "商品表示画面（商品検索後）"
+control 表示
+entity 商品DB
+boundary 商品詳細画面
+
+
+activate 購入者
+購入者 -> "商品表示画面（商品検索後）":1:商品を押下する
+activate "商品表示画面（商品検索後）"
+"商品表示画面（商品検索後）" -> 表示:
+deactivate "商品表示画面（商品検索後）"
+activate 表示
+表示 -> 商品DB: 1.1:情報を取得()
+activate 商品DB
+商品DB --> 表示:
+deactivate 商品DB
+表示 -> 商品詳細画面:1.2:表示()
+deactivate 表示
+activate 商品詳細画面
+購入者 -> 商品詳細画面 : 2:カートの商品を入れるを押下する
+商品詳細画面 -> 商品詳細画面: 2.1:「商品をカートに入れました」を表示()
+@enduml

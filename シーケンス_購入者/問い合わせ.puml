@@ -1,0 +1,31 @@
+@startuml
+
+
+actor 購入者
+boundary メニュー画面
+boundary 問い合わせ画面
+control 問い合わせ
+entity 問い合わせDB
+boundary 送信完了画面
+
+activate 購入者
+購入者 -> メニュー画面:1:問い合わせボタンを押下する
+activate メニュー画面
+メニュー画面 -> 問い合わせ画面:1.1:表示()
+deactivate メニュー画面
+activate 問い合わせ画面
+購入者 -> 問い合わせ画面:2:氏名とタイトル、説明欄を記入する
+問い合わせ画面 -> 問い合わせ :
+activate 問い合わせ
+
+alt 正常時
+    問い合わせ -> 問い合わせDB :2.1:入力情報を保存()
+    activate 問い合わせDB
+    問い合わせDB --> 問い合わせ:
+    deactivate 問い合わせDB
+    問い合わせ -> 送信完了画面:2.2:表示()
+    activate 送信完了画面
+else 未記入の場合
+    問い合わせ --> 問い合わせ画面:2.2.1:「未記入の欄があります」表示()
+end
+@enduml
