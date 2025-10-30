@@ -1,6 +1,6 @@
 @startuml
 
-actor 購入者 aaa
+actor 購入者
 boundary 商品画面
 control 表示
 entity ユーザーDB
