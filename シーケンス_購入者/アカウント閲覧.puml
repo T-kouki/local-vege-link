@@ -19,7 +19,7 @@ deactivate ユーザーDB
 表示 -> アカウントの詳細画面:1.3:表示()
 deactivate 表示
 activate アカウントの詳細画面
-購入者 -> アカウントの詳細画面:2:起動()
+
 
 
 @enduml
