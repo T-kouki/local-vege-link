@@ -23,7 +23,11 @@ deactivate 商品DB
 alt 正常時
     検索 -> 商品表示画面: 2.3:表示()
     activate 商品表示画面
+    deactivate 商品表示画面
 else 商品名に該当する商品が存在しない場合
     検索 -> 検索画面:2.2.1:「この商品に該当する商品はありません。」と表示()
+    deactivate 検索画面
+    deactivate 検索
+
 end
 @enduml

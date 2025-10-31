@@ -24,7 +24,10 @@ deactivate 問い合わせDB
 alt 正常時
     問い合わせ -> 送信完了画面:2.2:表示()
     activate 送信完了画面
+    deactivate 送信完了画面
 else 未記入の場合
-    問い合わせ --> 問い合わせ画面:2.2.1:「未記入の欄があります」表示()oooo
+    問い合わせ --> 問い合わせ画面:2.2.1:「未記入の欄があります」表示()
+    deactivate 問い合わせ画面
+    deactivate 問い合わせ
 end
 @endum

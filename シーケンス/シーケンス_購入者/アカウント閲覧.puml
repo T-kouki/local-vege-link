@@ -19,5 +19,6 @@ deactivate ユーザーDB
 表示 -> アカウントの詳細画面:1.3:表示()
 deactivate 表示
 activate アカウントの詳細画面
+deactivate アカウントの詳細画面
 
 @enduml

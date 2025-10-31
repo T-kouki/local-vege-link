@@ -18,7 +18,11 @@ deactivate ログアウト画面
 alt 「はい」を押下
     ログアウト -> ログアウト完了画面:2.1:表示()
     activate ログアウト完了画面
+    deactivate ログアウト完了画面
 else 「いいえ」を押下
     ログアウト --> メニュー画面:2.1.2:表示()
+deactivate メニュー画面
+deactivate ログアウト
+
 end
 @enduml

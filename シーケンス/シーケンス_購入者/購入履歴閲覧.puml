@@ -21,8 +21,10 @@ alt 正常時
     activate 購入履歴閲覧画面
 else 購入していた商品がなかった場合
     購入情報 -> 購入履歴閲覧画面:1.2.1:「購入している商品がありません」と表示()
+    deactivate 購入情報
+    deactivate 購入履歴閲覧画面
 end
-deactivate 購入情報
+
 
 
 @enduml

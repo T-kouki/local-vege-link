@@ -18,4 +18,6 @@ activate 商品DB
 deactivate 商品DB
 表示 -> 商品詳細画面:1.3:表示()
 activate 商品詳細画面
+deactivate 表示
+deactivate 商品詳細画面
 @endumld

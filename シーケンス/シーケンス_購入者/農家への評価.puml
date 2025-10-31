@@ -33,7 +33,10 @@ activate 処理確認
 alt 正常時
     処理確認 -> レビュー完了画面:2.3:完了()
     activate レビュー完了画面
+    deactivate レビュー完了画面
 else 星がつけられてなかった場合
     処理確認 --> レビュー画面:2.3.1:「評価がつけられていません」を表示()
+    deactivate レビュー画面
+    deactivate 処理確認
 end
 
