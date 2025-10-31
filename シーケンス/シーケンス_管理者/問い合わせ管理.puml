@@ -1,0 +1,25 @@
+@startuml 
+
+actor 購入者
+boundary メニュー画面
+boundary 問い合わせ一覧画面
+control 表示
+entity 問い合わせDB
+boundary 問い合わせ詳細画面
+
+activate 購入者
+購入者 -> メニュー画面:1:問い合わせ閲覧画面ボタンを押下する
+activate メニュー画面
+メニュー画面 -> 問い合わせ一覧画面:1.1:表示()
+deactivate メニュー画面
+activate 問い合わせ一覧画面
+購入者 -> 問い合わせ一覧画面:2:詳細ボタンを押下する
+問い合わせ一覧画面 -> 表示 :
+activate 表示
+表示 -> 問い合わせDB:2.1:情報を取得()
+activate 問い合わせDB
+問い合わせDB --> 表示 :
+deactivate 問い合わせDB
+表示 -> 問い合わせ詳細画面 :2.2:表示()
+activate 問い合わせ詳細画面
+@enduml

@@ -1,0 +1,45 @@
+@startuml
+actor システム管理者
+boundary メニュー画面
+control 商品情報
+boundary 商品一覧画面
+boundary 削除確認画面
+control 確認処理
+control 削除処理
+entity 商品DB
+boundary 削除完了画面
+
+activate システム管理者
+システム管理者 -> メニュー画面:1:商品一覧画面を押下
+activate メニュー画面
+メニュー画面 -> 商品情報:1.1:確認()
+activate 商品情報
+deactivate メニュー画面
+商品情報 -> 商品DB:1.2:情報取得()
+activate 商品DB
+商品DB --> 商品情報 :
+商品情報 -> 商品一覧画面:1.3:商品一覧を表示()
+activate 商品一覧画面
+deactivate 商品情報
+
+システム管理者 -> 商品一覧画面:2:削除ボタンを押下
+商品一覧画面 -> 削除確認画面:2.1:表示()
+activate 削除確認画面
+システム管理者 -> 削除確認画面:3:「はい」か「いいえ」を選択して押下
+削除確認画面 -> 確認処理:3.1:確認()
+activate 確認処理
+deactivate 削除確認画面
+alt 「はい」を選択した場合
+    確認処理 -> 削除処理:3.2:削除処理()
+    activate 削除処理
+    削除処理 -> 商品DB:3.3:商品削除()
+    商品DB --> 削除処理:
+    deactivate 商品DB
+    削除処理 -> 削除完了画面:3.4:表示()
+    activate 削除完了画面
+else 「いいえ」を選択した場合
+    確認処理 --> 商品一覧画面:3.2.1:表示()
+end
+
+
+@enduml
