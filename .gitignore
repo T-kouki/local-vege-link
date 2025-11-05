@@ -1,0 +1,13 @@
+# 仮想環境を除外
+venv/
+
+# Pythonキャッシュを除外
+__pycache__/
+*.pyc
+*.pyo
+
+# SQLiteデータベースを除外（任意）
+*.sqlite3
+
+# macOSなどの隠しファイル除外
+.DS_Store
