@@ -25,7 +25,7 @@ from polls import views
 def redirect_to_login(request):
     return redirect("/accounts/login/")
 urlpatterns = [
-     path("", redirect_to_login),   
+    path("", redirect_to_login),   
     path("polls/", include("polls.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
