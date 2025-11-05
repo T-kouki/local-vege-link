@@ -8,7 +8,7 @@ control 確認処理
 control 削除処理
 entity 商品DB
 boundary 削除完了画面
-
+あ
 activate システム管理者
 システム管理者 -> メニュー画面:1:商品一覧画面を押下
 activate メニュー画面
