@@ -1,6 +1,7 @@
 # 仮想環境を除外
 venv/
- 
+__pycache__/
+
 # Pythonキャッシュを除外
 __pycache__/
 *.pyc
