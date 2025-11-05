@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>メニュー</title>
+</head>
+<body>
+    <h1>メニュー画面</h1>
+    <p>ログイン成功！ここがメニューです。</p>
+
+    <!-- 商品管理ページへのボタン -->
+    <form action="{% url 'cart' %}" method="get">
+        <button type="submit">カート機能ボタンへ</button>
+    </form>
+    <form action="{% url 'login' %}" method="get">
+        <button type="submit">ログインページへ</button>
+    </form>
+</body>
+</html>
