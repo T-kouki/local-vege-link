@@ -8,6 +8,7 @@
     <h1>メニュー画面</h1>
     <p>ログイン成功！ここがメニューです。</p>
 
+
     <!-- 商品管理ページへのボタン -->
     <form action="{% url 'cart' %}" method="get">
         <button type="submit">カート機能ボタンへ</button>
@@ -15,7 +16,11 @@
     <form action="{% url 'login' %}" method="get">
         <button type="submit">ログインページへ</button>
     </form>
-    
+    <form action="{% url 'signup' %}" method="get">
+        <button type="submit">新規登録</button>
+    </form>
+
+
 <form method="get" action="{% url 'menu' %}">
         <input type="text" name="q" placeholder="検索キーワードを入力" value="{{ query|default:'' }}">
         <button type="submit">検索</button>
