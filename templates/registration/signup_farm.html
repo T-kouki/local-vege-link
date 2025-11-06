@@ -1,8 +1,62 @@
 <!-- signup_farm.html -->
 <h2>農家向け新規登録</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">登録</button>
-</form>
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新規登録</title>
+</head>
+
+<body>
+    <h2>新規登録ページ</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.familyname.id_for_label }}">姓</label>
+            {{ form.familyname }}
+            {{ form.familyname.errors }}
+        </div>
+        <div>
+            <label for="{{ form.lastname.id_for_label }}">名</label>
+            {{ form.lastname }}
+            {{ form.lastname.errors }}
+        </div>
+        <div>
+            <label for="{{ form.username.id_for_label }}">表示される名前</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+        <div>
+            <label for="{{ form.address.id_for_label }}">住所</label>
+            {{ form.address }}
+            {{ form.address.errors }}
+        </div>
+        <div>
+            <label for="{{ form.phone_number.id_for_label }}">電話番号</label>
+            {{ form.phone_number }}
+            {{ form.phone_number.errors }}
+        </div>
+        <div>
+            <label for="{{ form.email.id_for_label }}">メールアドレス</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div>
+
+        <div>
+            <label for="{{ form.password.id_for_label }}">パスワード</label>
+            {{ form.password }}
+            {{ form.password.errors }}
+        </div>
+        <div>
+            <label for="{{ form.image.id_for_label }}">販売実績が確認できる書類</label>
+            {{ form.image }}
+        </div>
+        <button type="submit">登録</button>
+    </form>
+
+    <p><a href="{% url 'login' %}">ログインページに戻る</a></p>
+</body>
+
+</html>
 

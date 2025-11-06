@@ -25,3 +25,7 @@ class FarmSignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'farm_name', 'email', 'password1', 'password2')
+    class ImageUploadForm(forms.Form):
+        username = forms.CharField(max_length=150)
+        password = forms.CharField(widget=forms.PasswordInput)
+        image = forms.ImageField(required=False)
