@@ -22,6 +22,8 @@ from django.urls import include, path
 from django.shortcuts import redirect
 from polls import views
 
+
+
 def redirect_to_login(request):
     return redirect("/accounts/login/")
 urlpatterns = [
