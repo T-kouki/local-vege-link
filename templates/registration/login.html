@@ -11,5 +11,12 @@
         {{ form.as_p }}
         <button type="submit">ログイン</button>
     </form>
+
+    <hr>
+
+    <p>アカウントをお持ちでない方はこちら：</p>
+    <form action="{% url 'signup' %}">
+        <button type="submit">新規登録</button>
+    </form>
 </body>
 </html>

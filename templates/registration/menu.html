@@ -15,5 +15,23 @@
     <form action="{% url 'login' %}" method="get">
         <button type="submit">ログインページへ</button>
     </form>
+    
+<form method="get" action="{% url 'menu' %}">
+        <input type="text" name="q" placeholder="検索キーワードを入力" value="{{ query|default:'' }}">
+        <button type="submit">検索</button>
+    </form>
+
+    <hr>
+
+    <!-- 🧾 検索結果 -->
+    {% if products %}
+        <ul>
+            {% for item in products %}
+                <li>{{ item.name }} - {{ item.description }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>該当する結果がありません。</p>
+    {% endif %}
 </body>
 </html>
