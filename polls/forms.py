@@ -1,7 +1,12 @@
-# polls/forms.py
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django import forms
+
+class loginForm(forms.Form):
+    username = forms.CharField(max_length=150, label='Username')
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
+
 
 # 飲食店向けフォーム
 class EatSignupForm(UserCreationForm):
