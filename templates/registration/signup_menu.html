@@ -1,0 +1,18 @@
+ <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ログイン</title>
+</head>
+<body>
+    <h2>ログインページ</h2>
+ <form method="get" action="{% url 'signup_eat' %}">
+        <button type="submit">飲食店向けアカウント登録</button>
+    </form>
+
+    <!-- 農家向けアカウント登録ボタン -->
+    <form method="get" action="{% url 'signup_farm' %}">
+        <button type="submit">農家向けアカウント登録</button>
+    </form>
+
+    <hr>

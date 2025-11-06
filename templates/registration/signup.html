@@ -2,16 +2,28 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>新規登録</title>
+    <title>ログイン</title>
 </head>
 <body>
-    <h2>新規登録ページ</h2>
-    <form method="post">
+    <h2>ログインページ</h2>
+     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">登録</button>
+        <p>
+            <label for="id_username">ユーザー名:</label>
+            <input type="text" name="username" id="id_username" required>
+        </p>
+        <p>
+            <label for="id_password">パスワード:</label>
+            <input type="password" name="password" id="id_password" required>
+        </p>
+        <button type="submit">ログイン</button>
     </form>
 
-    <p><a href="{% url 'login' %}">ログインページに戻る</a></p>
+    <hr>
+
+    
+
+    <!-- 登録済みの場合はログインページへのリンク -->
+    <p>新規登録はこちらから <a href="{% url 'signup_menu' %}">新規登録</a></p>
 </body>
 </html>
