@@ -7,8 +7,10 @@ def index(request):
 
 def menu(request):
     return render(request, 'registration/menu.html')
+
 def cart(request):
     return render(request,'registration/cart.html') 
+
 def signup_view(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -18,6 +20,12 @@ def signup_view(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+def logout_view(request):
+    from django.contrib.auth import logout
+    logout(request)
+    return redirect('index')
+
 def menu_view(request):
     query = request.GET.get('q')  # フォームからの検索キーワードを取得
     products = Product.objects.all()
