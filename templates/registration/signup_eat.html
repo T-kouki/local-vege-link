@@ -1,0 +1,8 @@
+<!-- signup_eat.html -->
+<h2>飲食店向け新規登録</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">登録</button>
+</form>
+
