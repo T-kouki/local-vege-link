@@ -1,3 +1,5 @@
+# beji/urls.py
+
 """
 URL configuration for beji project.
 
