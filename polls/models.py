@@ -11,6 +11,11 @@ class Product(models.Model):
 # Create your models here.
 
 class CustomUser(AbstractUser):
+    ROLE_CHOICES = [
+        ('farm', 'Farm'),
+        ('eat', 'Eat'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, blank=True, null=True)
     familyname = models.CharField(max_length=50, blank=True) # 姓
     lastname = models.CharField(max_length=50, blank=True)  # 名
     farm_name = models.CharField(max_length=150, unique=True)   # 表示される名前

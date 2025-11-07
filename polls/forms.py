@@ -35,3 +35,19 @@ class FarmSignupForm(UserCreationForm):
             'email': 'メールアドレス',
             'image': '販売実績が確認できる書類',
         }
+class FarmSignupForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'familyname', 'lastname', 'farm_name',
+            'address', 'phone_number', 'email', 'image',
+        ]
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email']  # ログインをメールで行う場合
+        user.role = 'farm'  # ✅ 農家ロールを設定
+        if commit:
+            user.save()
+        return user
+

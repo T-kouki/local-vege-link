@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from .models import Product
 from .forms import EatSignupForm, FarmSignupForm
+from django.contrib.auth import authenticate, login
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -63,3 +64,28 @@ def signup_farm(request):
     return render(request, 'registration/signup_farm.html', {'form': form})
 def signup_menu_view(request):
     return render(request, 'registration/signup_menu.html')
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            if user.role == 'farm':
+                return redirect('farm_menu')
+            elif user.role == 'eat':
+                return redirect('eat_menu')
+            else:
+                return redirect('home')
+        else:
+            return render(request, 'login.html', {'error': 'ユーザー名またはパスワードが違います。'})
+    return render(request, 'login.html')
+def farm_menu_view(request):
+    # ここに表示したいコンテキストを追加できます
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'registration/farm_menu.html', context)
+
+    
