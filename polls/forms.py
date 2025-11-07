@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django import forms
+from .models import CustomUser
 
 class loginForm(forms.Form):
     username = forms.CharField(max_length=150, label='Username')
@@ -19,18 +19,19 @@ class EatSignupForm(UserCreationForm):
 
 # 農家向けフォーム
 class FarmSignupForm(UserCreationForm):
-    email = forms.EmailField(required=True, label="メールアドレス")
-    farm_name = forms.CharField(max_length=100, label="農園名")
-
     class Meta:
-        familyname = forms.CharField(max_length=50, label="姓")
-        lastname = forms.CharField(max_length=50, label="名")
-        username = forms.CharField(max_length=150, label="表示される名前")
-        address = forms.CharField(max_length=255, label="住所")
-        phone_number = forms.CharField(max_length=20, label="電話番号")
-        email = forms.EmailField(required=True, label="メールアドレス")
-        image = forms.ImageField(required=False, label="販売実績が確認できる書類")
-    class ImageUploadForm(forms.Form):
-        username = forms.CharField(max_length=150)
-        password = forms.CharField(widget=forms.PasswordInput)
-        image = forms.ImageField(required=False)
+        model = CustomUser
+        fields = [
+            'familyname', 'lastname', 'username',
+            'address', 'phone_number', 'email',
+            'password1', 'password2', 'image'
+        ]
+        labels = {
+            'familyname': '姓',
+            'lastname': '名',
+            'username': '表示される名前',
+            'address': '住所',
+            'phone_number': '電話番号',
+            'email': 'メールアドレス',
+            'image': '販売実績が確認できる書類',
+        }
