@@ -78,7 +78,7 @@ def login_view(request):
             elif user.role == 'eat':
                 return redirect('eat_menu')
             else:
-                return redirect('home')
+                return redirect('menu')
         else:
             return render(request, 'login.html', {'error': 'ユーザー名またはパスワードが違います。'})
     return render(request, 'login.html')
