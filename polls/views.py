@@ -65,6 +65,7 @@ def signup_farm(request):
 def signup_menu_view(request):
     return render(request, 'registration/signup_menu.html')
 
+
 def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -80,8 +81,10 @@ def login_view(request):
             else:
                 return redirect('menu')
         else:
-            return render(request, 'login.html', {'error': 'ユーザー名またはパスワードが違います。'})
-    return render(request, 'login.html')
+            # registration/login.html に修正
+            return render(request, 'registration/login.html', {'error': 'ユーザー名またはパスワードが違います。'})
+    # ここも修正
+    return render(request, 'registration/login.html')
 def farm_menu_view(request):
     # ここに表示したいコンテキストを追加できます
     products = Product.objects.all()
