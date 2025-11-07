@@ -10,12 +10,21 @@ class loginForm(forms.Form):
 
 # 飲食店向けフォーム
 class EatSignupForm(UserCreationForm):
-    email = forms.EmailField(required=True, label="メールアドレス")
-    restaurant_name = forms.CharField(max_length=100, label="店舗名")
-
     class Meta:
-        model = User
-        fields = ('username', 'restaurant_name', 'email', 'password1', 'password2')
+        model = CustomUser
+        fields = [
+            'familyname', 'lastname', 'farm_name',
+            'address', 'phone_number', 'email',
+            'password1', 'password2'
+        ]
+        labels = {
+            'familyname': '姓',
+            'lastname': '名',
+            'farm_name': '表示される名前',
+            'address': '住所',
+            'phone_number': '電話番号',
+            'email': 'メールアドレス',
+        }
 
 # 農家向けフォーム
 class FarmSignupForm(UserCreationForm):
