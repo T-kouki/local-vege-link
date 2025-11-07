@@ -13,13 +13,13 @@ class Product(models.Model):
 class CustomUser(AbstractUser):
     familyname = models.CharField(max_length=50, blank=True) # 姓
     lastname = models.CharField(max_length=50, blank=True)  # 名
-    username = models.CharField(max_length=150, unique=True)   # 表示される名前
+    farm_name = models.CharField(max_length=150, unique=True)   # 表示される名前
     email = models.EmailField(unique=True)                     # メールアドレス
     address = models.CharField(max_length=255, blank=True)  # 住所
     phone_number = models.CharField(max_length=20, blank=True)  # 電話番号
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)  # 販売実績が確認できる書類
 
     def __str__(self):
-        return self.username
+        return self.farm_name
 
 
