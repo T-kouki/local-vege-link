@@ -12,3 +12,6 @@ __pycache__/
 # macOSなどの隠しファイル除外
 .DS_Store
 
+# --- Bootstrapなど外部ライブラリ ---
+static/css/styles*.css
+static/js/scripts*.js

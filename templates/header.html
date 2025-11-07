@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <!--ログイン後の動きが決まるときに再び変更する-->
+    <li class="active"><a href="{% url 'menu' %}">メニュー</a></li>
+    <li><a href="{% url 'templates:upload' %}">出品</a></li>
+    <li><a href="{% url 'templates:category_list' %}">カテゴリ</a></li>
+    <li><a href="{% url 'templates:contact' %}">お問い合わせ</a></li>
+    <li><a href="{% url 'templates:logout' %}" class="text-white">ログアウト</a></li>
+  {% else %}
+    <li class="active"></li><a href="{% url 'menu' %}">メニュー</a></li>
+    <li><a href="{% url 'login' %}">ログイン</a></li>
+  {% endif %}
+</body>
+</html>
