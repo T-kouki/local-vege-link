@@ -1,43 +1,10 @@
+{% extends 'no_login_base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <meta charset="UTF-8">
-    <title>メニュー</title>
-</head>
-<body>
-    <h1>メニュー画面</h1>
-    <p>未ログイン状態です</p>
 
+{% block title %} 未ログインメニュー{% endblock %}
 
-    <!-- 商品管理ページへのボタン -->
-    <form action="{% url 'cart' %}" method="get">
-        <button type="submit">カート機能ボタンへ</button>
-    </form>
-   
-    <form action="{% url 'login' %}" method="get">
-        <button type="submit">ログインまたは新規登録</button>
-    </form>
-
-
-<form method="get" action="{% url 'menu' %}">
-        <input type="text" name="q" placeholder="検索キーワードを入力" value="{{ query|default:'' }}">
-        <button type="submit">検索</button>
-    </form>
-
-    <hr>
-
-    <!-- 🧾 検索結果 -->
-    {% if products %}
-        <ul>
-            {% for item in products %}
-                <li>{{ item.name }} - {{ item.description }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>該当する結果がありません。</p>
-    {% endif %}
-    <script src="{% static 'js/scripts.js' %}"></script>
-</body>
-</html>
+{% block content %}
+<main>
+    <p>特集とか広告とか</p>
+</main>
+{% endblock %}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Vege-Link{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/farm_base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/no_login_base.css' %}">
     <script>
         // ハンバーガーメニューの開閉処理
         function toggleMenu() {
@@ -27,26 +27,21 @@
     <header>
         <div class="logo" onclick="location.href='/'">ロゴ（トップページ）</div>
 
+        {% comment %} 検索後の画面を作ってないので一旦メニュー画面に飛ばす {% endcomment %}
+        <form class="search-form" action="{% url 'menu' %}" method="get">
+            <input type="text" name="q" placeholder="検索ワードを入力" />
+            <button type="submit">☆検索☆</button>
+        </form>
+
         <div class="nav-buttons">
             {% if user.is_authenticated %}
             
-                <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">出品</div>
-                <div class="nav-button" onclick="location.href='{% url 'edit_profile' %}'">
-                    {{ user.username }} / プロフィール編集
-                </div>
-                
-                <div class="menu">
-                    <div class="menu-button" onclick="toggleMenu()">☰</div>
-                    <div class="dropdown" id="dropdownMenu">
-                        <!-- 存在する URL 名に合わせて修正 -->
-                        <a href="{% url 'product_upload' %}">出品管理</a>
-                        <a href="{% url 'farm_menu' %}">出品履歴</a>
-                        <!-- 未作成 -->
-                        {# <a href="{% url 'sales_manage' %}">売上管理</a> #}
-                        {# <a href="{% url 'contact' %}">問い合わせ</a> #}
-                        <a href="{% url 'logout' %}">ログアウト</a>
-                    </div>
-                </div>
+                <div class="nav-button" onclick="location.href='{% url 'login' %}'">ログイン</div>
+                <div class="nav-button" onclick="location.href='{% url 'cart' %}'">カート</div>
+
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button">ログイン</a>
+                <a href="{% url 'signup' %}" class="nav-button">新規登録</a>
             {% endif %}
         </div>
     </header>
