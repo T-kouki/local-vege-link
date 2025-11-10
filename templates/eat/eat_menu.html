@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>購入者メニュー</title>
-</head>
-<body>
-<h2>購入者メニュー</h2>
-<p>{{ user.farm_name }} さん、ようこそ！</p>
-</body>
+  </head>
+  <body>
+    {% csrf_token %}
+    <h2>購入者メニュー</h2>
+    <p>{{ user.farm_name }} さん、ようこそ！</p>
+  </body>
 </html>
