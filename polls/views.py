@@ -92,7 +92,7 @@ def login_view(request):
             if user.role == 'farm':
                 return redirect('farm_menu')
             elif user.role == 'eat':
-                return redirect('eat/eat_menu')
+                return redirect('eat_menu')
             else:
                 return redirect('menu')
 
