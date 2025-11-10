@@ -1,31 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'farm_base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>農家メニュー</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <script>
-        // ハンバーガーメニューの開閉処理
-        function toggleMenu() {
-            const dropdown = document.getElementById("dropdownMenu");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        }
 
-        // クリック外でメニューを閉じる
-        document.addEventListener('click', function(event) {
-            const menu = document.querySelector('.menu');
-            if (!menu.contains(event.target)) {
-                document.getElementById("dropdownMenu").style.display = "none";
-            }
-        });
-    </script>
-</head>
+{% block title %}農家メニュー{% endblock %}
 
-<body>
-    <main>
-        <p>特集とか広告とか</p>
-    </main>
-</body>
-</html>
+{% block content %}
+<main>
+    <p>特集とか広告とか</p>
+</main>
+{% endblock %}
