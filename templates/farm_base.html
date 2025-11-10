@@ -29,6 +29,7 @@
 
         <div class="nav-buttons">
             {% if user.is_authenticated %}
+            
                 <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">出品</div>
                 <div class="nav-button" onclick="location.href='{% url 'edit_profile' %}'">
                     {{ user.username }} / プロフィール編集
@@ -46,9 +47,6 @@
                         <a href="{% url 'logout' %}">ログアウト</a>
                     </div>
                 </div>
-            {% else %}
-                <a href="{% url 'login' %}" class="nav-button">ログイン</a>
-                <a href="{% url 'signup' %}" class="nav-button">新規登録</a>
             {% endif %}
         </div>
     </header>

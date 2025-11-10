@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Vege-Link{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/no_login_base.css' %}">
+    <script>
+        // ハンバーガーメニューの開閉処理
+        function toggleMenu() {
+            const dropdown = document.getElementById("dropdownMenu");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        // クリック外でメニューを閉じる
+        document.addEventListener('click', function(event) {
+            const menu = document.querySelector('.menu');
+            if (!menu.contains(event.target)) {
+                document.getElementById("dropdownMenu").style.display = "none";
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!-- ===== ヘッダー部分（全ページ共通） ===== -->
+    <header>
+        <div class="logo" onclick="location.href='/'">ロゴ（トップページ）</div>
+
+        {% comment %} 検索後の画面を作ってないので一旦メニュー画面に飛ばす {% endcomment %}
+        <form class="search-form" action="{% url 'menu' %}" method="get">
+            <input type="text" name="q" placeholder="検索ワードを入力" />
+            <button type="submit">☆検索☆</button>
+        </form>
+
+        <div class="nav-buttons">
+            {% if user.is_authenticated %}
+            
+                <div class="nav-button" onclick="location.href='{% url 'login' %}'">ログイン</div>
+                <div class="nav-button" onclick="location.href='{% url 'cart' %}'">カート</div>
+
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button">ログイン</a>
+                <a href="{% url 'signup' %}" class="nav-button">新規登録</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- ===== メインコンテンツ ===== -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
