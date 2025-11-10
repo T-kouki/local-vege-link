@@ -1,0 +1,35 @@
+<h2>出品管理ページ</h2>
+
+<a href="{% url 'product_add' %}">新規出品</a>
+
+<table border="1">
+    <tr>
+        <th>商品名</th>
+        <th>価格</th>
+        <th>画像</th>
+        <th>操作</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+            {% else %}
+                なし
+            {% endif %}
+        </td>
+        <td>
+            <!-- 編集リンク -->
+            <a href="{% url 'product_edit' product.pk %}">編集</a> |
+            <!-- 削除リンク -->
+            <a href="{% url 'product_delete' product.pk %}">削除</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">出品中の商品はありません</td>
+    </tr>
+    {% endfor %}
+</table>

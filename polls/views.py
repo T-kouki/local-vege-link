@@ -7,6 +7,9 @@ from .models import Product
 from .forms import EatSignupForm, FarmSignupForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, get_user_model
+from .forms import ProductUploadForm
+from .forms import ProfileEditForm
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -106,5 +109,26 @@ def farm_menu_view(request):
     products = Product.objects.all()
     context = {'products': products}
     return render(request, 'registration/farm_menu.html', context)
-
+def farm_product_upload(request):
+    if request.method == 'POST':
+        form = ProductUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('farm_menu')  # 登録後はメニュー画面にリダイレクト
+    else:
+        form = ProductUploadForm()
+    return render(request, 'registration/product_upload.html', {'form': form})
     
+@login_required
+def profile_edit(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('farm_menu')  # 編集後にリダイレクトするページ
+    else:
+        form = ProfileEditForm(instance=user)
+
+    return render(request, 'registration/profile_edit.html', {'form': form})
+# polls/views.py

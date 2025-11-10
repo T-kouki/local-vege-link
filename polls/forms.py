@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
+from .models import Product
+
 
 class loginForm(forms.Form):
     username = forms.CharField(max_length=150, label='Username')
@@ -59,4 +61,17 @@ class FarmSignupForm(UserCreationForm):
         if commit:
             user.save()
         return user
+class ProductUploadForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
 
