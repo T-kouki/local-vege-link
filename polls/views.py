@@ -14,10 +14,10 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def menu(request):
-    return render(request, 'registration/menu.html')
+    return render(request, 'no_login/menu.html')
 
 def cart(request):
-    return render(request,'registration/cart.html') 
+    return render(request,'no_login/cart.html') 
 
 def signup_view(request):
     if request.method == "POST":
@@ -27,7 +27,7 @@ def signup_view(request):
             return redirect('login')  
     else:
         form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
+    return render(request, 'no_login/signup.html', {'form': form})
 
 def logout_view(request):
     from django.contrib.auth import logout
@@ -45,7 +45,7 @@ def menu_view(request):
         'products': products,
         'query': query,
     }
-    return render(request, 'registration/menu.html', context)
+    return render(request, 'no_login/menu.html', context)
 def signup_eat(request):
     if request.method == 'POST':
         form = EatSignupForm(request.POST)
@@ -54,7 +54,7 @@ def signup_eat(request):
             return redirect('login')  # 登録後ログイン画面へ
     else:
         form = EatSignupForm()
-    return render(request, 'registration/signup_eat.html', {'form': form})
+    return render(request, 'no_login/signup_eat.html', {'form': form})
 
 
 def signup_farm(request):
@@ -65,9 +65,9 @@ def signup_farm(request):
             return redirect('login')
     else:
         form = FarmSignupForm()
-    return render(request, 'registration/signup_farm.html', {'form': form})
+    return render(request, 'no_login/signup_farm.html', {'form': form})
 def signup_menu_view(request):
-    return render(request, 'registration/signup_menu.html')
+    return render(request, 'no_login/signup_menu.html')
 
 def login_view(request):
     if request.method == "POST":
@@ -92,19 +92,19 @@ def login_view(request):
             if user.role == 'farm':
                 return redirect('farm_menu')
             elif user.role == 'eat':
-                return redirect('eat_menu')
+                return redirect('eat/eat_menu')
             else:
                 return redirect('menu')
 
         else:
-            return render(request, 'registration/login.html', {'error': 'メールアドレスまたはパスワードが違います。'})
+            return render(request, 'no_login/login.html', {'error': 'メールアドレスまたはパスワードが違います。'})
 
-    return render(request, 'registration/login.html')
+    return render(request, 'no_login/login.html')
 
 def farm_menu_view(request):
     # ここに表示したいコンテキストを追加できます
     products = Product.objects.all()
     context = {'products': products}
-    return render(request, 'registration/farm_menu.html', context)
+    return render(request, 'farm/farm_menu.html', context)
 
     
