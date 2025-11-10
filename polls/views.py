@@ -121,6 +121,12 @@ def farm_product_upload(request):
         form = ProductUploadForm()
     return render(request, 'farm/product_upload.html', {'form': form})
     
+def eat_menu_view(request):
+    # ここに表示したいコンテキストを追加できます
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'eat/eat_menu.html', context)
+
 
     
 @login_required
