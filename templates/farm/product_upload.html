@@ -1,0 +1,11 @@
+<!-- polls/templates/registration/product_upload.html -->
+
+<h2>商品アップロード</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">アップロード</button>
+</form>
+
+<a href="{% url 'farm_menu' %}">戻る</a>

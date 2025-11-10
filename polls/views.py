@@ -108,7 +108,7 @@ def farm_menu_view(request):
     # ここに表示したいコンテキストを追加できます
     products = Product.objects.all()
     context = {'products': products}
-    return render(request, 'registration/farm_menu.html', context)
+    return render(request, 'farm/farm_menu.html', context)
 def farm_product_upload(request):
     if request.method == 'POST':
         form = ProductUploadForm(request.POST, request.FILES)
@@ -117,7 +117,7 @@ def farm_product_upload(request):
             return redirect('farm_menu')  # 登録後はメニュー画面にリダイレクト
     else:
         form = ProductUploadForm()
-    return render(request, 'registration/product_upload.html', {'form': form})
+    return render(request, 'farm/product_upload.html', {'form': form})
     
 
     
@@ -132,5 +132,5 @@ def profile_edit(request):
     else:
         form = ProfileEditForm(instance=user)
 
-    return render(request, 'registration/profile_edit.html', {'form': form})
+    return render(request, 'farm/profile_edit.html', {'form': form})
 # polls/views.py

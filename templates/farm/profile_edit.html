@@ -1,0 +1,11 @@
+<!-- polls/templates/registration/profile_edit.html -->
+
+<h2>プロフィール編集</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">保存</button>
+</form>
+
+<a href="{% url 'farm_menu' %}">戻る</a>
