@@ -108,12 +108,17 @@
 </head>
 
 <body>
+<<<<<<< HEAD
+=======
+    {% csrf_token %}
+>>>>>>> 16cb751be18f86be66dffa04fa9b205a33b0b375
     <header>
         <div class="logo" onclick="location.href='/polls/farm_menu'">ロゴ（トップページ）</div>
 
         <div class="nav-buttons">
             <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">出品</div>
             <div class="nav-button" onclick="location.href='{% url 'edit_profile' %}'">表示名/プロフィール編集</div>
+<<<<<<< HEAD
 
             
 
@@ -124,6 +129,13 @@
                 <div class="dropdown" id="dropdownMenu">
                     
                   
+=======
+            
+            <div class="menu">
+                <div class="menu-button" onclick="toggleMenu()">☰ ハンバーガーメニュー</div>
+                <div class="dropdown" id="dropdownMenu">
+
+>>>>>>> 16cb751be18f86be66dffa04fa9b205a33b0b375
                 </div>
             </div>
         </div>

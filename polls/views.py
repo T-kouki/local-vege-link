@@ -10,6 +10,8 @@ from django.contrib.auth import authenticate, login, get_user_model
 from .forms import ProductUploadForm
 from .forms import ProfileEditForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.views.decorators.http import require_POST
 
 
 
@@ -134,3 +136,8 @@ def profile_edit(request):
 
     return render(request, 'farm/profile_edit.html', {'form': form})
 # polls/views.py
+
+@require_POST
+def logout_view(request):
+    logout(request)
+    return redirect('menu')
