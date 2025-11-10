@@ -88,20 +88,15 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            print(f"ログイン成功: {user.role=}")
 
             if user.role == 'farm':
-                print("農家")
                 return redirect('farm_menu')
             elif user.role == 'eat':
-                print("飲食")
                 return redirect('eat_menu')
             else:
-                print("だめ")
                 return redirect('menu')
 
         else:
-            print("認証失敗")
             return render(request, 'registration/login.html', {'error': 'メールアドレスまたはパスワードが違います。'})
 
     return render(request, 'registration/login.html')
