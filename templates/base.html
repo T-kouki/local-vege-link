@@ -35,12 +35,12 @@
                 </div>
                 
                 <div class="menu">
-                    <div class="menu-button" onclick="toggleMenu()">☰ ハンバーガーメニュー</div>
+                    <div class="menu-button" onclick="toggleMenu()">☰</div>
                     <div class="dropdown" id="dropdownMenu">
                         <!-- 存在する URL 名に合わせて修正 -->
                         <a href="{% url 'product_upload' %}">出品管理</a>
                         <a href="{% url 'farm_menu' %}">出品履歴</a>
-                        <!-- 下記はまだ未作成なのでコメントアウト -->
+                        <!-- 未作成 -->
                         {# <a href="{% url 'sales_manage' %}">売上管理</a> #}
                         {# <a href="{% url 'contact' %}">問い合わせ</a> #}
                         <a href="{% url 'logout' %}">ログアウト</a>
