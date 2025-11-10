@@ -13,5 +13,6 @@ urlpatterns = [
     path("signup/eat/", views.signup_eat, name="signup_eat"),
     path("signup/farm/", views.signup_farm, name="signup_farm"),
     path("farm_menu/", views.farm_menu_view, name="farm_menu"),
+    #path("eat_menu/", views.eat_menu_view, name="eat_menu"),
     path("login/", views.login_view, name="login"),
 ]

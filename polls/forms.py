@@ -25,6 +25,13 @@ class EatSignupForm(UserCreationForm):
             'phone_number': '電話番号',
             'email': 'メールアドレス',
         }
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email']
+        user.role = 'eat'  # ✅ 飲食店ロールを設定
+        if commit:
+            user.save()
+            return user
 
 # 農家向けフォーム
 class FarmSignupForm(UserCreationForm):
@@ -44,13 +51,6 @@ class FarmSignupForm(UserCreationForm):
             'email': 'メールアドレス',
             'image': '販売実績が確認できる書類',
         }
-class FarmSignupForm(UserCreationForm):
-    class Meta:
-        model = CustomUser
-        fields = [
-            'familyname', 'lastname', 'farm_name',
-            'address', 'phone_number', 'email', 'image',
-        ]
 
     def save(self, commit=True):
         user = super().save(commit=False)

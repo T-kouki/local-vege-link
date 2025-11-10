@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
         ('farm', 'Farm'),
         ('eat', 'Eat'),
     ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, blank=True, null=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     familyname = models.CharField(max_length=50, blank=True) # 姓
     lastname = models.CharField(max_length=50, blank=True)  # 名
     farm_name = models.CharField(max_length=150, unique=True)   # 表示される名前
@@ -23,6 +23,8 @@ class CustomUser(AbstractUser):
     address = models.CharField(max_length=255, blank=True)  # 住所
     phone_number = models.CharField(max_length=20, blank=True)  # 電話番号
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)  # 販売実績が確認できる書類
+
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='eat')
 
     def __str__(self):
         return self.farm_name

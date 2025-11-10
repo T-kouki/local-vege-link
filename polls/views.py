@@ -5,7 +5,11 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from .models import Product
 from .forms import EatSignupForm, FarmSignupForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login, get_user_model
+
+
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -65,26 +69,43 @@ def signup_farm(request):
 def signup_menu_view(request):
     return render(request, 'registration/signup_menu.html')
 
-
 def login_view(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+        email = request.POST.get("username")  # ← HTMLフォームのname属性
+        password = request.POST.get("password")
+
+        User = get_user_model()
+
+        try:
+            user_obj = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user_obj = None
+
+        user = None
+        if user_obj:
+            # authenticate()はusernameを使うので、CustomUser.usernameを渡す
+            user = authenticate(request, username=user_obj.username, password=password)
 
         if user is not None:
             login(request, user)
+            print(f"ログイン成功: {user.role=}")
+
             if user.role == 'farm':
+                print("農家")
                 return redirect('farm_menu')
             elif user.role == 'eat':
+                print("飲食")
                 return redirect('eat_menu')
             else:
+                print("だめ")
                 return redirect('menu')
+
         else:
-            # registration/login.html に修正
-            return render(request, 'registration/login.html', {'error': 'ユーザー名またはパスワードが違います。'})
-    # ここも修正
+            print("認証失敗")
+            return render(request, 'registration/login.html', {'error': 'メールアドレスまたはパスワードが違います。'})
+
     return render(request, 'registration/login.html')
+
 def farm_menu_view(request):
     # ここに表示したいコンテキストを追加できます
     products = Product.objects.all()
