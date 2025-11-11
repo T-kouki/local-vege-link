@@ -12,7 +12,7 @@ from .forms import ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.http import require_POST
-
+from django.contrib import messages
 
 
 def index(request):
@@ -76,7 +76,7 @@ def signup_menu_view(request):
 
 def login_view(request):
     if request.method == "POST":
-        email = request.POST.get("username")  # ← HTMLフォームのname属性
+        email = request.POST.get("username")
         password = request.POST.get("password")
 
         User = get_user_model()
@@ -102,7 +102,8 @@ def login_view(request):
                 return redirect('menu')
 
         else:
-            return render(request, 'no_login/login.html', {'error': 'メールアドレスまたはパスワードが違います。'})
+            messages.error(request, "メールアドレスまたはパスワードが誤りです。")
+            return redirect('login')  # ★ リダイレクトすることでF5連打でもフォーム再送信されない
 
     return render(request, 'no_login/login.html')
 
