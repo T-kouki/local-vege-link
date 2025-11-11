@@ -35,10 +35,15 @@ def signup_view(request):
         form = UserCreationForm()
     return render(request, 'no_login/signup.html', {'form': form})
 
+def logout_confirm_view(request):
+    # 確認画面を表示するだけ
+    return render(request, "no_login/logout_confirm.html")
+
+@require_POST
 def logout_view(request):
-    from django.contrib.auth import logout
+    # 実際にログアウトを行う
     logout(request)
-    return redirect('index')
+    return redirect("menu") 
 
 def menu_view(request):
     query = request.GET.get('q')  # フォームからの検索キーワードを取得
