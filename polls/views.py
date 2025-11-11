@@ -173,3 +173,15 @@ def search_view(request):#あってるかわからん
         'query': query,
     }
     return render(request, 'no_login/menu.html', context)
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = InquiryForm(request.POST)
+        if form.is_valid():
+            form.save()  # DBに保存
+            messages.success(request, 'お問い合わせを受け付けました。ありがとうございます！')
+            return redirect('polls:contact')
+    else:
+        form = InquiryForm()
+
+    return render(request, 'eat/contact.html', {'form': form})

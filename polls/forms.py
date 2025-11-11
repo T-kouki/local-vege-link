@@ -5,7 +5,6 @@ from .models import CustomUser
 from .models import Product
 from .models import Inquiry
 
-
 class loginForm(forms.Form):
     username = forms.CharField(max_length=150, label='Username')
     password = forms.CharField(widget=forms.PasswordInput, label='Password')
