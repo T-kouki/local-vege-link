@@ -1,0 +1,12 @@
+{% extends "eat_base.html" %}
+
+{% block title %}お問い合わせ{% endblock %}
+
+{% block content %}
+<h1>お問い合わせフォーム</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">送信</button>
+</form>
+{% endblock %}
