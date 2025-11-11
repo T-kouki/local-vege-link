@@ -190,3 +190,11 @@ def contact_view(request):
         form = InquiryForm()
 
     return render(request, 'eat/contact.html', {'form': form})
+def product_list_view(request):
+    # Productテーブルの全レコードを取得
+    products = Product.objects.all()
+    
+    context = {
+        'products': products,
+    }
+    return render(request, 'polls/product_list.html', context)

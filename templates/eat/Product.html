@@ -1,0 +1,17 @@
+<!-- polls/templates/polls/product_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品一覧</title>
+</head>
+<body>
+    <h1>商品一覧</h1>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }} - {{ product.price }}円</li>
+        {% empty %}
+            <li>商品はありません。</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
