@@ -12,7 +12,8 @@ from .forms import ProfileEditForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.http import require_POST
-
+from django.contrib import messages
+from .forms import InquiryForm
 
 
 def index(request):
@@ -147,3 +148,14 @@ def profile_edit(request):
 def logout_view(request):
     logout(request)
     return redirect('menu')
+def contact_view(request):
+    if request.method == 'POST':
+        form = InquiryForm(request.POST)
+        if form.is_valid():
+            form.save()  # DBに保存
+            messages.success(request, 'お問い合わせを受け付けました。ありがとうございます！')
+            return redirect('contact:contact')
+    else:
+        form = InquiryForm()
+
+    return render(request, 'contact/contact.html', {'form': form})
