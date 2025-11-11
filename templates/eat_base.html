@@ -25,7 +25,7 @@
 <body>
     <!-- ===== ヘッダー部分（全ページ共通） ===== -->
     <header>
-        <div class="logo" onclick="location.href='/'">ロゴ（トップページ）</div>
+        <div class="logo" onclick="location.href='/polls/eat_menu'">ロゴ（トップページ）</div>
  
         <form class="search-form" action="{% url 'search' %}" method="get">
             <input type="text" name="a" placeholder="検索ワードを入力" />
@@ -34,10 +34,7 @@
  
         <div class="nav-buttons">
             {% if user.is_authenticated %}
-                <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">出品</div>
-                <div class="nav-button" onclick="location.href='{% url 'edit_profile' %}'">
-                    {{ user.username }} / プロフィール編集
-                </div>
+                <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">カート件数表示🛒</div>
                
                 <div class="menu">
                     <div class="menu-button" onclick="toggleMenu()">☰</div>
