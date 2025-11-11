@@ -197,4 +197,4 @@ def product_list_view(request):
     context = {
         'products': products,
     }
-    return render(request, 'polls/product_list.html', context)
+    return render(request, 'eat/product.html', context)
