@@ -1,24 +1,24 @@
- <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>ログイン</title>
-</head>
-<body>
-    
-    <h2>ログインページ</h2>
+{% extends 'no_login_base.html' %}
+{% load static %}
 
-    
+{% block title %}新規登録ページ{% endblock %}
 
-    </form>
+{% block content %}
+<main class="signup-main">
+    <h1 class="signup-title">アカウント新規登録</h1>
 
- <form method="get" action="{% url 'signup_eat' %}">
-        <button type="submit">飲食店向けアカウント登録</button>
-    </form>
+    <div class="signup-buttons">
+        <form method="get" action="{% url 'signup_farm' %}">
+            <button type="submit" class="signup-button">農家向け<br>アカウント登録</button>
+        </form>
 
-    <!-- 農家向けアカウント登録ボタン -->
-    <form method="get" action="{% url 'signup_farm' %}">
-        <button type="submit">農家向けアカウント登録</button>
-    </form>
+        <form method="get" action="{% url 'signup_eat' %}">
+            <button type="submit" class="signup-button">飲食店向け<br>アカウント登録</button>
+        </form>
+    </div>
 
-    <hr>
+    <div class="login-link">
+        <a href="{% url 'login' %}">登録済みの場合<br>ログインはこちらから</a>
+    </div>
+</main>
+{% endblock %}
