@@ -1,16 +1,7 @@
 {% extends "eat_base.html" %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>購入者メニュー</title>
-  </head>
-  <body>
-    {% csrf_token %}
-    <h2>購入者メニュー</h2>
-    <p>{{ user.farm_name }} さん、ようこそ！</p>
-  </body>
-</html>
- 
- 
+{% block title %}購入者メニュー{% endblock %}
+
+{% block content %}
+<h2>購入者メニュー</h2>
+<p>{{ user.farm_name }} さん、ようこそ！</p>
+{% endblock %}
