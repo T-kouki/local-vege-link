@@ -1,28 +1,36 @@
-<!DOCTYPE html>
-<html lang="ja">
+{% extends 'no_login_base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>ログイン</title>
-</head>
+{% block title %}ログイン{% endblock %}
 
-<body>
-    <h2>ログインページ</h2>
-    <form method="post" action="{% url 'login' %}">
+{% block content %}
+<main class="login-container">
+
+    <h1 class="login-title">ログイン</h1>
+
+    <!-- エラーメッセージ（messages使用） -->
+    {% if messages %}
+        {% for message in messages %}
+            <p class="error-message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'polls:login' %}" class="login-form">
         {% csrf_token %}
-        <label for="id_username">メールアドレス:</label>
-        <input type="text" name="username" id="id_username" required><br>
 
-        <label for="id_password">パスワード:</label>
-        <input type="password" name="password" id="id_password" required><br>
+        <label for="id_username" class="input-label">メールアドレス</label>
+        <input type="text" name="username" id="id_username" class="input-box" required>
 
-        <button type="submit">ログイン</button>
+        <label for="id_password" class="input-label">パスワード</label>
+        <input type="password" name="password" id="id_password" class="input-box" required>
+
+        <p class="signup-link">
+            <a href="{% url 'signup_menu' %}">新規登録はこちらから</a>
+        </p>
+
+        <button type="submit" class="login-button">ログインボタン</button>
     </form>
 
-    <hr>
 
-    <!-- 登録済みの場合はログインページへのリンク -->
-    <p>新規登録はこちらから <a href="{% url 'signup_menu' %}">新規登録</a></p>
-</body>
-
-</html>
+</main>
+{% endblock %}

@@ -11,5 +11,6 @@ urlpatterns = [
     path("polls/", include("polls.urls")),
     path("admin/", admin.site.urls),
     path("menu/", views.menu_view, name="menu"), 
+    path("polls/", include(("polls.urls", "polls"), namespace="polls")),
     
 ]

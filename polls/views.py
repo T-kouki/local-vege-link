@@ -77,7 +77,7 @@ def signup_menu_view(request):
 
 def login_view(request):
     if request.method == "POST":
-        email = request.POST.get("username")  # ← HTMLフォームのname属性
+        email = request.POST.get("username")
         password = request.POST.get("password")
 
         User = get_user_model()
@@ -103,7 +103,8 @@ def login_view(request):
                 return redirect('menu')
 
         else:
-            return render(request, 'no_login/login.html', {'error': 'メールアドレスまたはパスワードが違います。'})
+            messages.error(request, "メールアドレスまたはパスワードが誤りです。")
+            return redirect('login')  # ★ リダイレクトすることでF5連打でもフォーム再送信されない
 
     return render(request, 'no_login/login.html')
 
@@ -154,11 +155,11 @@ def contact_view(request):
         if form.is_valid():
             form.save()  # DBに保存
             messages.success(request, 'お問い合わせを受け付けました。ありがとうございます！')
-            return redirect('contact:contact')
+            return redirect('polls:contact')
     else:
         form = InquiryForm()
 
-    return render(request, 'contact/contact.html', {'form': form})
+    return render(request, 'eat/contact.html', {'form': form})
 
 def search_view(request):#あってるかわからん
     query = request.GET.get('a')  # フォームからの検索キーワードを取得
