@@ -197,3 +197,52 @@ main {
 .login-button:hover {
     background-color: #f0f0f0;
 }
+
+/* ====== 新規登録ページ専用 ====== */
+.signup-main {
+    margin: 40px auto;
+    padding: 40px 20px;
+    max-width: 600px;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+.signup-title {
+    font-size: 32px;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.signup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.signup-button {
+    font-size: 18px;
+    padding: 20px 30px;
+    border: 1px solid #000;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    width: 200px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.signup-button:hover {
+    background-color: #eee;
+}
+
+.login-link {
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.login-link a {
+    text-decoration: underline;
+    color: black;
+}
