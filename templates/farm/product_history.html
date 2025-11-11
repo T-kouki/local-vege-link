@@ -1,0 +1,28 @@
+{% extends "farm_base.html" %}
+{% block title %}出品履歴{% endblock %}
+
+{% block content %}
+<h1>出品履歴</h1>
+
+{% if products %}
+    {% for product in products %}
+        <div style="border:1px solid #999; padding:10px; margin-bottom:10px; display:flex; align-items:center;">
+            <div style="width:80px; height:80px; border:1px solid #ccc; display:flex; justify-content:center; align-items:center; margin-right:20px;">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="商品画像" style="max-width:100%; max-height:100%;">
+                {% else %}
+                    <span style="color:#999; font-size:12px;">商品画像</span>
+                {% endif %}
+            </div>
+            <div style="flex-grow:1;">
+                <p style="margin:0; font-weight:bold;">{{ product.name }}</p>
+                <p style="margin:0;">¥{{ product.price }}</p>
+            </div>
+            {#<div style="min-width:120px; text-align:right; font-size:14px; color:#555;">出品日: {{ product.created_at|date:"Y/m/d" }}#}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>出品した商品はありません。</p>
+{% endif %}
+{% endblock %}

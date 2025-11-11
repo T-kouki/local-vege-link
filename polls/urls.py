@@ -23,4 +23,5 @@ urlpatterns = [
     path('search/', views.search_view, name='search'),
     path('contact/', views.contact_view, name='contact'),
     path("products/", views.product_list_view, name="product_list"),
+    path("product_history/", views.product_history_view, name="product_history"),
 ]
