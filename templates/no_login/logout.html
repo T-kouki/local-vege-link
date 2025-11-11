@@ -6,7 +6,7 @@
 </head>
 <body>
     <h2>ログアウトページ</h2>
-    <form method="post">
+    <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <label>本当にログアウトしますか？</label><br>
         <button type="submit">ログアウト</button>
