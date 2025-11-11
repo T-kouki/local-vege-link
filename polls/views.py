@@ -159,3 +159,16 @@ def contact_view(request):
         form = InquiryForm()
 
     return render(request, 'contact/contact.html', {'form': form})
+
+def search_view(request):#あってるかわからん
+    query = request.GET.get('a')  # フォームからの検索キーワードを取得
+    products = Product.objects.all()
+
+    if query:
+        products = products.filter(name__icontains=query)  # 部分一致検索
+
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'no_login/menu.html', context)

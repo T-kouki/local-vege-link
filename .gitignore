@@ -13,5 +13,8 @@ __pycache__/
 .DS_Store
 
 # --- Bootstrapなど外部ライブラリ ---
-static/css/styles*.css
-static/js/scripts*.js
+static/css/*.css
+static/js/*.js
+
+# Environment settings
+.env

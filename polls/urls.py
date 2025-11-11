@@ -19,4 +19,6 @@ urlpatterns = [
     path("edit_profile/", views.profile_edit, name="edit_profile"),
     path('', views.contact_view, name='contact'),
    
+    path('search/', views.search_view, name='search'),
+
 ]
