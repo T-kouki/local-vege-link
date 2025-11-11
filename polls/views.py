@@ -147,3 +147,16 @@ def profile_edit(request):
 def logout_view(request):
     logout(request)
     return redirect('menu')
+
+def search_view(request):#あってるかわからん
+    query = request.GET.get('a')  # フォームからの検索キーワードを取得
+    products = Product.objects.all()
+
+    if query:
+        products = products.filter(name__icontains=query)  # 部分一致検索
+
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'no_login/menu.html', context)
