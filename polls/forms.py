@@ -15,14 +15,14 @@ class EatSignupForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'familyname', 'lastname', 'farm_name',
+            'familyname', 'lastname', 'nickname',
             'address', 'phone_number', 'email',
             'password1', 'password2'
         ]
         labels = {
             'familyname': '姓',
             'lastname': '名',
-            'farm_name': '表示される名前',
+            'nickname': '表示される名前',
             'address': '住所',
             'phone_number': '電話番号',
             'email': 'メールアドレス',
@@ -40,14 +40,14 @@ class FarmSignupForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'familyname', 'lastname', 'farm_name',
+            'familyname', 'lastname', 'nickname',
             'address', 'phone_number', 'email',
             'password1', 'password2', 'image'
         ]
         labels = {
             'familyname': '姓',
             'lastname': '名',
-            'farm_name': '表示される名前',
+            'nickname': '表示される名前',
             'address': '住所',
             'phone_number': '電話番号',
             'email': 'メールアドレス',
