@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Vege-Link{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/eat_base.css' %}">
+    <script>
+        // ハンバーガーメニューの開閉処理
+        function toggleMenu() {
+            const dropdown = document.getElementById("dropdownMenu");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        // クリック外でメニューを閉じる
+        document.addEventListener('click', function(event) {
+            const menu = document.querySelector('.menu');
+            if (!menu.contains(event.target)) {
+                document.getElementById("dropdownMenu").style.display = "none";
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <!-- ===== ヘッダー部分（全ページ共通） ===== -->
+    <header>
+        <div class="logo" onclick="location.href='/'">ロゴ（トップページ）</div>
+
+        <form class="search-form" action="{% url 'search' %}" method="get">
+            <input type="text" name="a" placeholder="検索ワードを入力" />
+            <button type="submit">検索</button>
+        </form>
+
+        <div class="nav-buttons">
+            {% if user.is_authenticated %}
+                <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">出品</div>
+                <div class="nav-button" onclick="location.href='{% url 'edit_profile' %}'">
+                    {{ user.username }} / プロフィール編集
+                </div>
+                
+                <div class="menu">
+                    <div class="menu-button" onclick="toggleMenu()">☰</div>
+                    <div class="dropdown" id="dropdownMenu">
+                        <a href="{% url 'contact' %}">購入履歴</a>
+                        <a href="{% url 'contact' %}">問い合わせ</a>
+                        <a href="{% url 'logout' %}">ログアウト</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-button">ログイン</a>
+                <a href="{% url 'signup' %}" class="nav-button">新規登録</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- ===== メインコンテンツ ===== -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
