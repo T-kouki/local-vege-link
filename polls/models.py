@@ -39,3 +39,9 @@ class Inquiry(models.Model):
     def __str__(self):
         return f"{self.name} ({self.email})"
 
+
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+

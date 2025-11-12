@@ -18,3 +18,9 @@ static/js/*.js
 
 # Environment settings
 .env
+
+# 画像
+/media/
+
+# 商品画像
+/products/

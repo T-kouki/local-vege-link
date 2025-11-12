@@ -30,7 +30,7 @@
         <div class="logo" onclick="location.href='/'">ロゴ（トップページ）</div>
 
         {% comment %} 検索後の画面を作ってないので一旦メニュー画面に飛ばす {% endcomment %}
-        <form class="search-form" action="{% url 'menu' %}" method="get">
+        <form class="search-form" action="{% url 'search' %}" method="get">
             <input type="text" name="q" placeholder="検索ワードを入力" />
             <button type="submit">☆検索☆</button>
         </form>
@@ -43,7 +43,7 @@
 
             {% else %}
                 <a href="{% url 'login' %}" class="nav-button">ログイン</a>
-                <a href="{% url 'signup' %}" class="nav-button">新規登録</a>
+                <a href="{% url 'signup_menu' %}" class="nav-button">新規登録</a>
             {% endif %}
         </div>
     </header>

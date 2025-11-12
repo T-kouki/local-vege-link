@@ -2,6 +2,8 @@
 
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -24,4 +26,7 @@ urlpatterns = [
     path('contact/', views.contact_view, name='contact'),
     path("products/", views.product_list_view, name="product_list"),
     path("product_history/", views.product_history_view, name="product_history"),
+    path('product/<int:pk>/', views.product_detail, name='productdetail')
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

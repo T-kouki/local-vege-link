@@ -12,8 +12,9 @@ from django.contrib.auth import logout
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from .forms import InquiryForm
- 
- 
+from .models import Item
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import get_object_or_404
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
  
@@ -31,7 +32,7 @@ def signup_view(request):
             return redirect('login')  
     else:
         form = UserCreationForm()
-    return render(request, 'no_login/signup.html', {'form': form})
+    return render(request, 'no_login/signup_menu.html', {'form': form})
  
 def logout_confirm_view(request):
     # 確認画面を表示するだけ
@@ -141,6 +142,7 @@ def profile_edit(request):
         form = ProfileEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            update_session_auth_hash(request, user)
             return redirect('farm_menu')  # 編集後にリダイレクトするページ
     else:
         form = ProfileEditForm(instance=user)
@@ -164,18 +166,24 @@ def contact_view(request):
  
     return render(request, 'eat/contact.html', {'form': form})
  
-def search_view(request):#あってるかわからん
-    query = request.GET.get('a')  # フォームからの検索キーワードを取得
-    products = Product.objects.all()
- 
+def search_view(request):
+    query = request.GET.get('q')  # フォームの入力値を取得
+    items = Product.objects.all()    # 全アイテムを取得
+
     if query:
-        products = products.filter(name__icontains=query)  # 部分一致検索
- 
+        items = items.filter(name__icontains=query)  # 部分一致検索
+
     context = {
-        'products': products,
+        'items': items,
         'query': query,
     }
-    return render(request, 'no_login/menu.html', context)
+    if request.user.is_authenticated:
+        search_name = 'eat_search.html'
+    else:
+        search_name = 'no_login_search.html'
+
+    return render(request, search_name, context)
+
  
 def contact_view(request):
     if request.method == 'POST':
@@ -206,3 +214,10 @@ def product_history_view(request):
         'products': products
     }
     return render(request, 'farm/product_history.html', context)
+def product_detail(request, pk):
+    item = get_object_or_404(Product, pk=pk)
+    
+    context = {
+        'item': item,
+    }
+    return render(request, 'no_login/product_detail.html', context)

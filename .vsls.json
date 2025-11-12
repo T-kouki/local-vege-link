@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/vsls.schema.json",
+  "include": [
+    "**/templates/",
+    "**/static/"
+  ],
+  "ignore": [
+    "node_modules",
+    ".git",
+    "__pycache__"
+  ]
+}

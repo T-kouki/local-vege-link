@@ -66,6 +66,12 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['nickname', 'email', 'address', 'phone_number']
+        labels = {
+            'nickname': '表示される名前',
+            'address': '住所',
+            'phone_number': '電話番号',
+            'email': 'メールアドレス',
+        }
         widgets = {
             'nickname': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
