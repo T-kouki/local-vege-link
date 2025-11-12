@@ -61,10 +61,7 @@ class FarmSignupForm(UserCreationForm):
         if commit:
             user.save()
         return user
-class ProductUploadForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = '__all__'
+
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = CustomUser
@@ -83,3 +80,20 @@ class InquiryForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'rows': 5}),
         }
+
+class ProductUploadForm(forms.ModelForm):
+    price = forms.CharField(label="価格", max_length=20)
+
+    class Meta:
+        model = Product
+        fields = ['name', 'price', 'image']
+
+    def clean_price(self):
+        price = self.cleaned_data['price']
+        # 入力から「円」を削除
+        if price.endswith("円"):
+            price = price.replace("円", "")
+        try:
+            return int(price)  # 数値に変換
+        except ValueError:
+            raise forms.ValidationError("価格は数字で入力してください")

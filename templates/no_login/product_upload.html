@@ -1,10 +1,22 @@
+<!-- polls/templates/registration/product_upload.html -->
 
+<h2>商品アップロード</h2>
 
-{% block content %}
-<h2>商品登録</h2>
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">登録</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">アップロード</button>
+    {% for product in products %}
+  <div>
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <p>{{ product.price }}円</p>
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% endif %}
+  </div>
+{% endfor %}
+
 </form>
-{% endblock %}
+
+<a href="{% url 'farm_menu' %}">戻る</a>

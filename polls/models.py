@@ -5,7 +5,9 @@ from django.contrib.auth.models import AbstractUser
 class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-
+    price = models.IntegerField()  # DBには数値だけ保存
+    image = models.ImageField(upload_to='products/', blank=True, null=True)  # 商品画像
+    
     def __str__(self):
         return self.name
 # Create your models here.
