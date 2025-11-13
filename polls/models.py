@@ -1,15 +1,24 @@
 from django.db import models
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.utils import timezone
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
+    price = models.IntegerField()
     description = models.TextField(blank=True)
-    price = models.IntegerField()  # DBには数値だけ保存
-    image = models.ImageField(upload_to='products/', blank=True, null=True)  # 商品画像
-    
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)  
+    user = models.ForeignKey( 
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='products'
+    )
     def __str__(self):
         return self.name
+
+
 # Create your models here.
 
 class CustomUser(AbstractUser):

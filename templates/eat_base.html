@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Vege-Link{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/eat_base.css' %}">
+    <link rel="stylesheet" href="{% static 'eat_base.css' %}">
+
     <script>
         // ハンバーガーメニューの開閉処理
         function toggleMenu() {
@@ -34,14 +35,14 @@
  
         <div class="nav-buttons">
             {% if user.is_authenticated %}
-                <div class="nav-button" onclick="location.href='{% url 'product_upload' %}'">カート件数表示🛒</div>
+                <div class="nav-button" onclick="location.href='{% url 'cart' %}'">カート件数表示🛒</div>
                
                 <div class="menu">
                     <div class="menu-button" onclick="toggleMenu()">☰</div>
                     <div class="dropdown" id="dropdownMenu">
                         <a href="{% url 'contact' %}">購入履歴</a>
                         <a href="{% url 'contact' %}">問い合わせ</a>
-                        <a href="{% url 'logout_confirm' %}">ログアウト</a> 
+                        <a href="{% url 'logout' %}">ログアウト</a> 
                         
                         
 

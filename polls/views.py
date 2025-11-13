@@ -1,3 +1,5 @@
+# views.py
+
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -35,8 +37,13 @@ def signup_view(request):
     return render(request, 'no_login/signup_menu.html', {'form': form})
  
 def logout_confirm_view(request):
-    # 確認画面を表示するだけ
-    return render(request, "no_login/logout_confirm.html")
+    # ロールに応じてテンプレートを切り替え
+    user = request.user
+    if user.role == 'farm':
+        template_name = 'farm/logout_farm.html'
+    elif user.role == 'eat':
+        template_name = 'eat/logout_eat.html'
+    return render(request, template_name)
  
 @require_POST
 def logout_view(request):
@@ -117,16 +124,22 @@ def farm_menu_view(request):
     products = Product.objects.all()
     context = {'products': products}
     return render(request, 'farm/farm_menu.html', context)
+
+@login_required
 def farm_product_upload(request):
     if request.method == 'POST':
         form = ProductUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('farm_menu')  # 登録後はメニュー画面にリダイレクト
+            product = form.save(commit=False)
+            product.user = request.user  # 出品者を紐づける
+            product.save()
+            messages.success(request, "商品を出品しました！")
+            return redirect('farm_menu')
     else:
         form = ProductUploadForm()
     return render(request, 'farm/product_upload.html', {'form': form})
-   
+
+
 def eat_menu_view(request):
     # ここに表示したいコンテキストを追加できます
     products = Product.objects.all()
@@ -178,9 +191,9 @@ def search_view(request):
         'query': query,
     }
     if request.user.is_authenticated:
-        search_name = 'eat_search.html'
+        search_name = 'eat/eat_search.html'
     else:
-        search_name = 'no_login_search.html'
+        search_name = 'no_login/search.html'
 
     return render(request, search_name, context)
 
@@ -205,19 +218,28 @@ def product_list_view(request):
     }
     return render(request, 'eat/product.html', context)
 
+
 @login_required
 def product_history_view(request):
-    # ログインユーザーの出品だけ
     products = Product.objects.filter(user=request.user).order_by('-created_at')
-
-    context = {
-        'products': products
-    }
+    context = {'products': products}
     return render(request, 'farm/product_history.html', context)
+
 def product_detail(request, pk):
     item = get_object_or_404(Product, pk=pk)
     
     context = {
         'item': item,
     }
-    return render(request, 'no_login/product_detail.html', context)
+    if request.user.is_authenticated:
+        detail_name = 'eat/eat_detail.html'
+    else:
+        detail_name = 'no_login/product_detail.html'
+    return render(request,detail_name, context)
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    # 仮の処理（本格的なカート機能はあとで実装）
+    print(f"{product.name} をカートに追加しました")
+    return redirect('product_detail', pk=product.id)
+
+

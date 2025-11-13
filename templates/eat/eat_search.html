@@ -1,0 +1,22 @@
+{% extends 'eat_base.html' %} 
+{% block content %}
+<h2>検索結果{% if query %}：「{{ query }}」{% endif %}</h2>
+
+{% if items %}
+    <ul>
+        {% for item in items %}
+            <li>
+                <a href="{% url 'product_detail' item.id %}">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" width="200"><br>
+                    {% endif %}
+                    {{ item.name }}<br>
+                    {{ item.price }}円
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>該当する商品は見つかりませんでした。</p>
+{% endif %}
+{% endblock %}

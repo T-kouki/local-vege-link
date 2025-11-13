@@ -92,14 +92,17 @@ class ProductUploadForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'image']
+        fields = ['name', 'price', 'description', 'image']
+        labels = {
+            'name':'名前',
+            'price':'価格',
+            'description':'説明欄',
+            'image':'商品画像',
+        }
 
     def clean_price(self):
-        price = self.cleaned_data['price']
-        # 入力から「円」を削除
-        if price.endswith("円"):
-            price = price.replace("円", "")
+        price = self.cleaned_data['price'].replace("円", "").strip()
         try:
-            return int(price)  # 数値に変換
+            return int(price)
         except ValueError:
-            raise forms.ValidationError("価格は数字で入力してください")
+            raise forms.ValidationError("価格は数字で入力してください。")

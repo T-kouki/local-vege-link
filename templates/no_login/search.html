@@ -6,7 +6,7 @@
     <ul>
         {% for item in items %}
             <li>
-                <a href="{% url 'productdetail' item.id %}">
+                <a href="{% url 'product_detail' item.id %}">
                     {% if item.image %}
                         <img src="{{ item.image.url }}" alt="{{ item.name }}" width="200"><br>
                     {% endif %}

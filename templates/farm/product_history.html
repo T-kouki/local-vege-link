@@ -15,8 +15,9 @@
                 {% endif %}
             </div>
             <div style="flex-grow:1;">
-                <p style="margin:0; font-weight:bold;">{{ product.name }}</p>
-                <p style="margin:0;">¥{{ product.price }}</p>
+                <p style="margin:0; font-weight:bold;">商品名: {{ product.name }}</p>
+                <p style="margin:0;">商品価格: ¥{{ product.price }}</p>
+                <p style="margin:0;">出品日: {{ product.created_at|date:"Y/m/d" }}</p>
             </div>
             {#<div style="min-width:120px; text-align:right; font-size:14px; color:#555;">出品日: {{ product.created_at|date:"Y/m/d" }}#}
             </div>

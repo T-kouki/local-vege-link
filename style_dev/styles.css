@@ -1,0 +1,75 @@
+/* ヘッダー全体のスタイル */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #34495e;
+    padding: 10px 30px;
+    color: white;
+    height: 70px;
+    box-sizing: border-box;
+}
+
+/* ロゴ部分（左側） */
+.logo a {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+/* 検索欄（中央） */
+.search-bar {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-bar form {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input[type="text"] {
+    width: 320px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px 0 0 6px;
+    font-size: 1em;
+    outline: none;
+}
+
+.search-bar button {
+    padding: 10px 14px;
+    border: none;
+    background-color: #1abc9c;
+    color: white;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.search-bar button:hover {
+    background-color: #16a085;
+}
+
+/* ログイン・新規登録ボタン（右側） */
+.auth-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.auth-buttons a {
+    background-color: #e67e22;
+    color: white;
+    padding: 10px 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.auth-buttons a:hover {
+    background-color: #d35400;
+}

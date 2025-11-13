@@ -1,0 +1,87 @@
+body {
+    font-family: "Noto Sans JP", sans-serif;
+    margin: 0;
+    background-color: #f8f8f8;
+}
+ 
+/* ====== ヘッダー部分 ====== */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 20px;
+}
+ 
+.logo {
+    border: 1px solid #000;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+ 
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+ 
+.nav-button {
+    border: 1px solid #000;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+ 
+.nav-button:hover {
+    background-color: #eee;
+}
+ 
+/* ====== ハンバーガーメニュー ====== */
+.menu {
+    position: relative;
+}
+ 
+.menu-button {
+    border: 1px solid #000;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+ 
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    width: 200px;
+    z-index: 10;
+}
+ 
+.dropdown a {
+    display: block;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    color: #000;
+    text-decoration: none;
+}
+ 
+.dropdown a:hover {
+    background-color: #f0f0f0;
+}
+ 
+/* ====== メインコンテンツ ====== */
+main {
+    margin: 20px;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    padding: 50px;
+    text-align: center;
+    font-size: 18px;
+}
+ 
