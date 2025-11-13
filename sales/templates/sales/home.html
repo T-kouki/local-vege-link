@@ -1,34 +1,12 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}  <!-- 共通レイアウトがある場合 -->
 {% block content %}
-<h2>🌾 売上一覧ページ</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">売上管理メニュー</h2>
+    <p>農家専用の売上管理ページです。以下のメニューから選択してください。</p>
 
-<p>ここでは農家さんの売上データを表示します。</p>
-
-<table border="1" cellpadding="5">
-  <tr>
-    <th>日付</th>
-    <th>農家</th>
-    <th>商品</th>
-    <th>数量</th>
-    <th>単価</th>
-    <th>合計</th>
-  </tr>
-
-  {% for sale in sales %}
-  <tr>
-    <td>{{ sale.date }}</td>
-    <td>{{ sale.farmer }}</td>
-    <td>{{ sale.product }}</td>
-    <td>{{ sale.quantity }}</td>
-    <td>{{ sale.price_per_unit }}</td>
-    <td>{{ sale.total_amount }}</td>
-  </tr>
-  {% empty %}
-  <tr>
-    <td colspan="6">まだ売上データがありません。</td>
-  </tr>
-  {% endfor %}
-</table>
-
-{% endblock %}
+    <div class="list-group">
+        <a href="{% url 'sales_report' %}" class="list-group-item list url 'product_upload' %}" class="list-group-item 
+            メニューに戻る
+        </a>
+    </div>
+</div>

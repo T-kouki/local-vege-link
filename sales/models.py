@@ -1,15 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
+from products.models import Product  # 商品モデルが別アプリならimport
 
-class Sale(models.Model):
-    farmer = models.CharField(max_length=100)
-    product = models.CharField(max_length=100)
+class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateField()
-
-    @property
-    def total_amount(self):
-        return self.quantity * self.price_per_unit
-
-    def __str__(self):
-        return f"{self.farmer} - {self.product} ({self.date})"
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True)
+    farmer = models.ForeignKey(User, on_delete=models.CASCADE)  # 農家ユーザー

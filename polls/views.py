@@ -242,4 +242,8 @@ def add_to_cart(request, product_id):
     print(f"{product.name} をカートに追加しました")
     return redirect('product_detail', pk=product.id)
 
-
+@login_required
+def product_manage_view(request):
+    products = Product.objects.filter(user=request.user).order_by('-created_at')
+    context = {'products': products}
+    return render(request, 'farm/product_manage.html', context)

@@ -1,6 +1,14 @@
 from django.shortcuts import render
-from .models import Sale
+from django.db.models import Sum
+from .models import Order
 
 def sales_home(request):
-    sales = Sale.objects.all().order_by('-date')
-    return render(request, 'sales/home.html', {'sales': sales})
+    return render(request, 'sales/home.html')
+
+def sales_report(request):
+    farmer_orders = Order.objects.filter(farmer=request.user)
+    total_sales = farmer_orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    return render(request, 'sales/report.html', {
+        'orders': farmer_orders,
+        'total_sales': total_sales
+    })

@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>ログアウト</title>
-</head>
-<body>
-    <h2>ログアウトページ</h2>
-    <form method="post" action="{% url 'logout' %}">
+{% extends 'eat_base.html' %}
+{% load static %}
+
+{% block title %}購入者メニュー{% endblock %}
+
+{% block content %}
+<main>
+    <form method="post" action="{% url 'polls:logout' %}">
         {% csrf_token %}
         <label>本当にログアウトしますか？</label><br>
         <button type="submit">ログアウト</button>
     </form>
-</html>
+</main>
+{% endblock %}
