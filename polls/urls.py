@@ -10,7 +10,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("menu/", views.menu, name="menu"),
     path("cart/", views.cart, name="cart"),
-    path("signup/", views.signup_view, name="signup"),
     path("login/", views.login_view, name="login"),
     path('logout_confirm/', views.logout_confirm_view, name='logout_confirm'),
     path('logout/', views.logout_view, name='logout'),
@@ -23,12 +22,18 @@ urlpatterns = [
     path("edit_profile/", views.profile_edit, name="edit_profile"),
     path('contact', views.contact_view, name='contact'),
     path('search/', views.search_view, name='search'),
-    path('contact/', views.contact_view, name='contact'),
     path("products/", views.product_list_view, name="product_list"),
     path("product_history/", views.product_history_view, name="product_history"),
     path('product/<int:pk>/', views.product_detail, name='product_detail'),
     path('add_cart/add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    
+    path("product_manage/", views.product_manage_view, name="product_manage"),
+    path('product/<int:pk>/edit/', views.product_edit_view, name='product_edit'),
+    path('product/<int:pk>/delete/', views.product_delete_view, name='product_delete'),
+    path('sales_manage/', views.sales_manage, name='sales_manage'),
+    path('product_edit/', views.product_edit_view, name='product_edit'),
+    #path('sales_report/', views.sales_report, name='sales_report'),
+     path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+  

@@ -1,0 +1,23 @@
+{% extends 'farm_base.html' %}
+
+{% block title %}商品削除確認{% endblock %}
+
+{% block content %}
+<h2>商品削除確認</h2>
+
+<p>以下の商品を削除してもよろしいですか？</p>
+
+<div style="border:1px solid #ccc; padding:10px; margin-bottom:20px;">
+    <p><strong>商品名:</strong> {{ product.name }}</p>
+    <p><strong>価格:</strong> ¥{{ product.price }}</p>
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:200px;">
+    {% endif %}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">削除する</button>
+    <p><a href="{% url 'product_manage' %}" class="btn btn-secondary">キャンセル</a></p>
+</form>
+{% endblock %}

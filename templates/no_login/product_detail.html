@@ -3,33 +3,33 @@
 {% load static %}
 
 {% block content %}
-<div class="product-detail">
+<div class="item-detail">
 
   <!-- 左側：商品画像 -->
-  <div class="product-images">
-    {% if product.image %}
-      <img src="{{ product.image.url }}" alt="{{ product.name }}">
+  <div class="item-images">
+    {% if item.image %}
+      <img src="{{ item.image.url }}" alt="{{ item.name }}">
     {% else %}
       <img src="{% static 'images/noimage.png' %}" alt="画像なし">
     {% endif %}
   </div>
 
   <!-- 右側：商品情報 -->
-  <div class="product-info">
-    <h1>{{ product.name }}</h1>
-    <h2>¥{{ product.price }}</h2>
+  <div class="item-info">
+    <h1>{{ item.name }}</h1>
+    <h2>¥{{ item.price }}</h2>
 
     <div class="farmer-info">
       <div class="farmer-profile">
-        {% if product.user.image %}
-          <img src="{{ product.user.image.url }}" alt="農家プロフィール画像">
+        {% if item.user.profile %}
+          <img src="{{ item.user.profile.url }}" alt="農家プロフィール画像">
         {% else %}
           <img src="{% static 'images/default_user.png' %}" alt="プロフィールなし">
         {% endif %}
       </div>
 
       <div class="farmer-name">
-        <p>{{ product.user.nickname }}</p>
+        <p>{{ item.user.nickname }}</p>
       </div>
 
       <div class="farmer-rating">
@@ -37,16 +37,11 @@
       </div>
     </div>
 
-    <div class="product-description">
-      <p>{{ product.description|linebreaksbr }}</p>
+    <div class="item-description">
+      <p>{{ item.description|linebreaksbr }}</p>
     </div>
 
-    <div class="add-to-cart">
-      <form method="post" action="{% url 'polls:add_to_cart' product.id %}">
-        {% csrf_token %}
-        <button type="submit" class="cart-button">カートに入れる</button>
-      </form>
-    </div>
+    
   </div>
 </div>
 {% endblock %}

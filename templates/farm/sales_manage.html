@@ -1,0 +1,52 @@
+{% extends 'farm_base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">売上管理</h2>
+
+    <!-- 1つの売上カードの例 -->
+    {% for sale in sales_list %}
+    <div class="card mb-3 p-3">
+
+        <div class="row">
+            <!-- 商品画像 -->
+            <div class="col-3 d-flex align-items-center justify-content-center">
+                {% if sale.product.image %}
+                    <img src="{{ sale.product.image.url }}" alt="商品画像" class="img-fluid" style="max-height: 100px;">
+                {% else %}
+                    <div class="border" style="width: 100px; height: 100px;"></div>
+                {% endif %}
+            </div>
+
+            <!-- 商品情報 -->
+            <div class="col-9 d-flex align-items-center">
+                <div class="w-100">
+                    <div class="row text-center fw-bold">
+                        <div class="col">商品名</div>
+                        <div class="col">商品価格</div>
+                        <div class="col">販売手数料</div>
+                        <div class="col">送料</div>
+                        <div class="col">税率</div>
+                        <div class="col">販売方法</div>
+                        <div class="col">取引完了日</div>
+                    </div>
+
+                    <div class="row text-center mt-1">
+                        <div class="col">{{ sale.product.name }}</div>
+                        <div class="col">{{ sale.price }}円</div>
+                        <div class="col">{{ sale.fee }}円</div>
+                        <div class="col">{{ sale.shipping }}円</div>
+                        <div class="col">{{ sale.tax }}%</div>
+                        <div class="col">{{ sale.method }}</div>
+                        <div class="col">{{ sale.completed_at|date:"Y-m-d" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

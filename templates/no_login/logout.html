@@ -1,0 +1,11 @@
+{% extends 'no_login_base.html' %}
+{% load static %}
+
+{% block title %}ログアウト完了{% endblock %}
+
+{% block content %}
+<main>
+    <h1>ログアウトが完了しました</h1>
+    <a href="{% url 'menu' %}">メインメニューへ</a>
+</main>
+{% endblock %}

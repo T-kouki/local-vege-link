@@ -17,25 +17,35 @@ from .forms import InquiryForm
 from .models import Item
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
+from .models import Sale
+from django.http import JsonResponse
+from .forms import productEditForm 
+
+
+def sales_manage(request):
+    farmer_orders = Sale.objects.filter(farmer=request.user)
+    total_sales = farmer_orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    return render(request, 'farm/sales_manage.html', {
+        'orders': farmer_orders,
+        'total_sales': total_sales
+    })
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
  
 def menu(request):
     return render(request, 'no_login/menu.html')
- 
 def cart(request):
-    return render(request,'no_login/cart.html')
- 
-def signup_view(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')  
-    else:
-        form = UserCreationForm()
-    return render(request, 'no_login/signup_menu.html', {'form': form})
- 
+
+    cart_items = Item.objects.filter(user=request.user)  # ログインユーザーのカート商品
+    total = sum(item.product.price * item.quantity for item in cart_items)  # 合計金額
+
+    context = {
+        'cart_items': cart_items,
+        'total': total,
+    }
+    return render(request, 'eat/eatcart.html', context)
 def logout_confirm_view(request):
     # ロールに応じてテンプレートを切り替え
     user = request.user
@@ -45,11 +55,7 @@ def logout_confirm_view(request):
         template_name = 'eat/logout_eat.html'
     return render(request, template_name)
  
-@require_POST
-def logout_view(request):
-    # 実際にログアウトを行う
-    logout(request)
-    return redirect("menu")
+
  
 def menu_view(request):
     query = request.GET.get('q')  # フォームからの検索キーワードを取得
@@ -76,7 +82,7 @@ def signup_eat(request):
  
 def signup_farm(request):
     if request.method == 'POST':
-        form = FarmSignupForm(request.POST)
+        form = FarmSignupForm(request.POST, request.FILES) 
         if form.is_valid():
             form.save()
             return redirect('login')
@@ -236,14 +242,76 @@ def product_detail(request, pk):
     else:
         detail_name = 'no_login/product_detail.html'
     return render(request,detail_name, context)
+@login_required
+
+@login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    # 仮の処理（本格的なカート機能はあとで実装）
-    print(f"{product.name} をカートに追加しました")
-    return redirect('product_detail', pk=product.id)
+
+    # 既存アイテム取得 or 新規作成
+    item = Item.objects.filter(user=request.user, product=product).first()
+    if item:
+        item.quantity += 1
+        item.save()
+    else:
+        item = Item.objects.create(user=request.user, product=product, quantity=1)
+
+    # AJAXかどうか判定（Django 5 対応）
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+    if is_ajax:
+        cart_items = Item.objects.filter(user=request.user)
+        cart_data = [
+            {
+                'id': i.id,
+                'product_name': i.product.name,
+                'quantity': i.quantity,
+                'price': i.product.price,
+            } for i in cart_items
+        ]
+        return JsonResponse({'success': True, 'cart': cart_data, 'message': f"「{product.name}」をカートに追加しました！"})
+
+    messages.success(request, f"「{product.name}」をカートに追加しました！")
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
 
 @login_required
 def product_manage_view(request):
     products = Product.objects.filter(user=request.user).order_by('-created_at')
     context = {'products': products}
     return render(request, 'farm/product_manage.html', context)
+
+@login_required
+def product_edit_view(request, pk):
+    product = get_object_or_404(Product, pk=pk, user=request.user)
+
+    if request.method == 'POST':
+        form = ProductEditForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "商品を更新しました！")
+            return redirect('product_manage')
+    else:
+        form = ProductEditForm(instance=product)
+
+    return render(request, 'farm/product_edit.html', {'form': form, 'product': product})
+
+@login_required
+def product_delete_view(request, pk):
+    product = get_object_or_404(Product, pk=pk, user=request.user)
+
+    if request.method == "POST":
+        
+        product_name = product.name
+        product.delete()
+        return render(request, 'farm/product_delete_done.html', {'product_name': product_name})
+    
+    return render(request, 'farm/product_delete.html', {'product': product})
+def remove_from_cart(request, item_id):
+    
+    item = get_object_or_404(Item, id=item_id)
+    item.delete()
+    return redirect('cart')  # カートページに戻す

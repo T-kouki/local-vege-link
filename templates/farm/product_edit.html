@@ -1,0 +1,20 @@
+{% extends 'farm_base.html' %}
+
+{% block title %}出品変更{% endblock %}
+
+{% block content %}
+<h2>出品変更</h2>
+<style>
+input[type="checkbox"] {
+    display: none;
+}
+</style>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">変更する</button>
+    <a href="{% url 'product_manage' %}" class="btn btn-secondary">キャンセル</a>
+</form>
+
+{% endblock %}

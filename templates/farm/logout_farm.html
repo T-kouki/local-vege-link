@@ -7,8 +7,11 @@
 <main>
     <form method="post" action="{% url 'polls:logout' %}">
         {% csrf_token %}
-        <label>本当にログアウトしますか？</label><br>
-        <button type="submit">ログアウト</button>
+        <p class="logout-text">ログアウトしますか？</p>
+        <div class="logout-buttons">
+            <button type="submit" class="yes-button">はい</button>
+            <button type="button" class="no-button" onclick="location.href='{% url 'polls:farm_menu' %}'">いいえ</button>
+        </div>
     </form>
 </main>
 {% endblock %}
