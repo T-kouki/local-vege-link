@@ -20,16 +20,17 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from .models import Sale
 from django.http import JsonResponse
-from .forms import productEditForm 
-
+from .forms import ProductEditForm 
+from django.utils import timezone
 
 def sales_manage(request):
-    farmer_orders = Sale.objects.filter(farmer=request.user)
-    total_sales = farmer_orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
-    return render(request, 'farm/sales_manage.html', {
-        'orders': farmer_orders,
-        'total_sales': total_sales
-    })
+    # ログイン中の農家の売上データを取得
+    sales = Sale.objects.filter(farmer=request.user).order_by('-date')
+
+    context = {
+        'sales': sales
+    }
+    return render(request, 'farm/sales_manage.html', context)
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -233,7 +234,7 @@ def product_history_view(request):
 
 def product_detail(request, pk):
     item = get_object_or_404(Product, pk=pk)
-    
+
     context = {
         'item': item,
     }
@@ -315,3 +316,26 @@ def remove_from_cart(request, item_id):
     item = get_object_or_404(Item, id=item_id)
     item.delete()
     return redirect('cart')  # カートページに戻す
+@login_required
+def checkout(request):
+    cart_items = Item.objects.filter(user=request.user)
+
+    if not cart_items.exists():
+        return redirect('cart')
+
+    purchased_items = []
+
+    for item in cart_items:
+        sale = Sale.objects.create(
+            product=item.product,
+            quantity=item.quantity,
+            total_price=item.product.price * item.quantity,
+            farmer=item.product.user  # 出品者
+        )
+        purchased_items.append(sale)
+
+    cart_items.delete()
+
+    return render(request, 'eat/checkout_complete.html', {
+        'purchased_items': purchased_items
+    })

@@ -1,0 +1,30 @@
+{% extends 'eat_base.html' %}
+{% load static %}
+
+{% block title %}購入完了{% endblock %}
+
+{% block content %}
+<h2>購入ありがとうございました！</h2>
+
+{% if purchased_items %}
+    <div>
+        {% for item in purchased_items %}
+        <div class="purchased-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width:100px; height:auto;">
+            {% else %}
+                <img src="{% static 'images/default_product.png' %}" alt="no image" style="width:100px; height:auto;">
+            {% endif %}
+            <div>
+                <strong>{{ item.product.name }}</strong><br>
+                ¥{{ item.product.price }} × {{ item.quantity }} = ¥{{ item.total_price }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>購入した商品はありません。</p>
+{% endif %}
+
+<a href="{% url 'eat_menu' %}"><button>商品一覧に戻る</button></a>
+{% endblock %}

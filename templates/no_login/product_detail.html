@@ -21,8 +21,8 @@
 
     <div class="farmer-info">
       <div class="farmer-profile">
-        {% if item.user.profile %}
-          <img src="{{ item.user.profile.url }}" alt="農家プロフィール画像">
+        {% if item.user.profile_image %}
+          <img src="{{ item.user.profile_image.url }}" alt="農家プロフィール画像">
         {% else %}
           <img src="{% static 'images/default_user.png' %}" alt="プロフィールなし">
         {% endif %}
