@@ -1,0 +1,43 @@
+{% extends 'eat_base.html' %}
+
+{% block content %}
+<h1>{{ farmer.username }} さんの詳細ページ</h1>
+
+<h2>出品商品</h2>
+{% if farmer_items %}
+    <ul>
+    {% for item in farmer_items %}
+        <li>{{ item.product.name }} - ¥{{ item.product.price }} × {{ item.quantity }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>出品商品はありません。</p>
+{% endif %}
+
+<hr>
+
+<h2>評価</h2>
+<p>平均評価: {{ avg_rating|floatformat:1 }} / 5</p>
+<p>評価件数: {{ farmer.farmerrating_set.count }} 件</p>
+
+{% if user.is_authenticated and user != farmer %}
+    <h3>評価を送信する</h3>
+    <form method="post" action="{% url 'polls:rate_farmer' farmer.id %}">
+        {% csrf_token %}
+        <label for="score">評価 (1～5):</label>
+        <select name="score" id="score" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <button type="submit">送信</button>
+    </form>
+{% elif not user.is_authenticated %}
+    <p><a href="{% url 'login' %}">ログイン</a>して評価できます。</p>
+{% else %}
+    <p>自分自身を評価することはできません。</p>
+{% endif %}
+
+{% endblock %}

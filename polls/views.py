@@ -22,6 +22,12 @@ from .models import Sale
 from django.http import JsonResponse
 from .forms import ProductEditForm 
 from django.utils import timezone
+from .models import FarmerRating
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect
+from .models import Product, CustomUser, Inquiry
+from django.db.models import Avg
+
 
 def sales_manage(request):
     # ログイン中の農家の売上データを取得
@@ -34,7 +40,7 @@ def sales_manage(request):
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
- 
+
 def menu(request):
     return render(request, 'no_login/menu.html')
 def cart(request):
@@ -55,16 +61,16 @@ def logout_confirm_view(request):
     elif user.role == 'eat':
         template_name = 'eat/logout_eat.html'
     return render(request, template_name)
- 
 
- 
+
+
 def menu_view(request):
     query = request.GET.get('q')  # フォームからの検索キーワードを取得
     products = Product.objects.all()
- 
+
     if query:
         products = products.filter(name__icontains=query)  # 部分一致検索
- 
+
     context = {
         'products': products,
         'query': query,
@@ -79,8 +85,7 @@ def signup_eat(request):
     else:
         form = EatSignupForm()
     return render(request, 'no_login/signup_eat.html', {'form': form})
- 
- 
+
 def signup_farm(request):
     if request.method == 'POST':
         form = FarmSignupForm(request.POST, request.FILES) 
@@ -92,40 +97,42 @@ def signup_farm(request):
     return render(request, 'no_login/signup_farm.html', {'form': form})
 def signup_menu_view(request):
     return render(request, 'no_login/signup_menu.html')
- 
+
 def login_view(request):
     if request.method == "POST":
         email = request.POST.get("username")
         password = request.POST.get("password")
- 
+
         User = get_user_model()
- 
+
         try:
             user_obj = User.objects.get(email=email)
         except User.DoesNotExist:
             user_obj = None
- 
+
         user = None
         if user_obj:
             # authenticate()はusernameを使うので、CustomUser.usernameを渡す
             user = authenticate(request, username=user_obj.username, password=password)
- 
+
         if user is not None:
             login(request, user)
- 
+
             if user.role == 'farm':
                 return redirect('farm_menu')
             elif user.role == 'eat':
                 return redirect('eat_menu')
+            elif user.role == 'admin':
+                return redirect('admin_menu')
             else:
                 return redirect('menu')
- 
+
         else:
             messages.error(request, "メールアドレスまたはパスワードが誤りです。")
             return redirect('login')  # ★ リダイレクトすることでF5連打でもフォーム再送信されない
- 
+
     return render(request, 'no_login/login.html')
- 
+
 def farm_menu_view(request):
     # ここに表示したいコンテキストを追加できます
     products = Product.objects.all()
@@ -152,9 +159,13 @@ def eat_menu_view(request):
     products = Product.objects.all()
     context = {'products': products}
     return render(request, 'eat/eat_menu.html', context)
- 
- 
-   
+
+def admin_menu_view(request):
+    # ここに表示したいコンテキストを追加できます
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'admin/admin_menu.html', context)
+
 @login_required
 def profile_edit(request):
     user = request.user
@@ -166,10 +177,10 @@ def profile_edit(request):
             return redirect('farm_menu')  # 編集後にリダイレクトするページ
     else:
         form = ProfileEditForm(instance=user)
- 
+
     return render(request, 'farm/profile_edit.html', {'form': form})
 # polls/views.py
- 
+
 @require_POST
 def logout_view(request):
     logout(request)
@@ -183,9 +194,9 @@ def contact_view(request):
             return redirect('polls:contact')
     else:
         form = InquiryForm()
- 
+
     return render(request, 'eat/contact.html', {'form': form})
- 
+
 def search_view(request):
     query = request.GET.get('q')  # フォームの入力値を取得
     items = Product.objects.all()    # 全アイテムを取得
@@ -214,7 +225,7 @@ def contact_view(request):
             return redirect('polls:contact')
     else:
         form = InquiryForm()
- 
+
     return render(request, 'eat/contact.html', {'form': form})
 def product_list_view(request):
     # Productテーブルの全レコードを取得
@@ -339,3 +350,104 @@ def checkout(request):
     return render(request, 'eat/checkout_complete.html', {
         'purchased_items': purchased_items
     })
+from django.shortcuts import render, get_object_or_404
+from .models import CustomUser, Item   # モデル名はあなたの環境に合わせて変更
+
+
+
+def farm_detail(request, pk):
+    # 農家ユーザーを取得
+    farmer = get_object_or_404(CustomUser, pk=pk)
+
+    # その農家の出品商品を取得
+    farmer_items = Item.objects.filter(user=farmer).order_by('-id')
+
+    # 平均評価を取得
+    avg_rating = FarmerRating.objects.filter(farmer=farmer).aggregate(average=Avg('score'))['average']
+
+    context = {
+        'farmer': farmer,
+        'farmer_items': farmer_items,
+        'avg_rating': avg_rating or 0,  # 評価がまだない場合は0に
+    }
+
+    return render(request, 'eat/farm_detail.html', context)
+
+
+def buyer_list_view(request):
+    sales = Sale.objects.filter(farmer=request.user).order_by('-date')
+
+    return render(request, 'eat/buyer_list.html', {
+        'sales': sales
+    })
+
+
+def admin_required(view_func):
+    return user_passes_test(lambda u: u.is_authenticated and u.role == 'admin')(view_func)
+
+
+@login_required
+@admin_required
+def user_list_view(request):
+    products = Product.objects.all().order_by('-created_at')
+    context = {
+        'products': products,
+    }
+    return render(request, 'admin/user_list.html', context)
+
+
+@login_required
+@admin_required
+def product_manage_view(request):
+    products = Product.objects.all().order_by('-created_at')
+    context = {
+        'products': products,
+    }
+    return render(request, 'admin/product_manage.html', context)
+
+@login_required
+@admin_required
+def user_manage_view(request):
+    users = CustomUser.objects.all().order_by('id')
+    context = {
+        'users': users,
+    }
+    return render(request, 'admin/user_manage.html', context)
+
+@login_required
+@admin_required
+def contact_view(request):
+    inquiries = Inquiry.objects.all().order_by('-created_at')
+    context = {
+        'inquiries': inquiries,
+    }
+    return render(request, 'admin/contact_view.html', context)
+@login_required
+def rate_farmer(request, farmer_id):
+    """
+    ログインユーザーが農家に評価（1〜5）を付ける
+    """
+    farmer = get_object_or_404(CustomUser, id=farmer_id, role='farm')
+
+    if request.method == 'POST':
+        score = request.POST.get('score')
+        try:
+            score = int(score)
+            if score < 1 or score > 5:
+                raise ValueError
+        except (ValueError, TypeError):
+            messages.error(request, "評価は1〜5の整数で指定してください。")
+            return redirect('farm_detail', pk=farmer.id)
+
+        # 既に評価済みなら更新、なければ新規作成
+        rating, created = FarmerRating.objects.update_or_create(
+            farmer=farmer,
+            user=request.user,
+            defaults={'score': score}
+        )
+
+        messages.success(request, f"{farmer.nickname}さんを評価しました！")
+        return redirect('farm_detail', pk=farmer.id)
+
+    # GETアクセスの場合はリダイレクト
+    return redirect('farm_detail', pk=farmer.id)

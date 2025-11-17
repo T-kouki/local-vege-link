@@ -13,12 +13,7 @@
     <h2>システム管理者ページ</h2>
 
     <nav>
-        <ul>
-            <li><a href="{% url 'admin_dashboard' %}">ダッシュボード</a></li>
-            <li><a href="{% url 'admin_user_list' %}">ユーザー管理</a></li>
-            <li><a href="{% url 'admin_settings' %}">システム設定</a></li>
-        </ul>
-
+      
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit">ログアウト</button>

@@ -1,0 +1,77 @@
+{% extends 'eat_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1>{{ farmer.nickname }} さんを評価する</h1>
+
+<form method="post" class="rating-form">
+    {% csrf_token %}
+
+    <div class="star-rating">
+        <input type="radio" id="star5" name="score" value="5" required />
+        <label for="star5" title="5 stars">★</label>
+
+        <input type="radio" id="star4" name="score" value="4" />
+        <label for="star4" title="4 stars">★</label>
+
+        <input type="radio" id="star3" name="score" value="3" />
+        <label for="star3" title="3 stars">★</label>
+
+        <input type="radio" id="star2" name="score" value="2" />
+        <label for="star2" title="2 stars">★</label>
+
+        <input type="radio" id="star1" name="score" value="1" />
+        <label for="star1" title="1 star">★</label>
+    </div>
+
+    <button type="submit" class="submit-rating">評価を送信</button>
+</form>
+
+
+<style>
+/* 星スタイル */
+.star-rating {
+    direction: rtl;
+    display: inline-flex;
+    font-size: 40px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: #ccc;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+/* 選択された星より右側も含めて黄色にする */
+.star-rating input:checked ~ label {
+    color: #f5c518;
+}
+
+/* マウスを乗せた時に黄色にする */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5c518;
+}
+
+/* 送信ボタン */
+.submit-rating {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-rating:hover {
+    background-color: #45a049;
+}
+</style>
+
+{% endblock %}

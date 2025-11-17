@@ -29,7 +29,11 @@
       </div>
 
       <div class="farmer-name">
-        <p>{{ item.user.nickname }}</p>
+        <p>
+          <a href="{% url 'polls:farm_detail' item.user.id %}">
+            {{ item.user.nickname }}
+          </a>
+        </p>
       </div>
 
       <div class="farmer-rating">
@@ -42,15 +46,12 @@
     </div>
 
     <div class="add-to-cart">
-        <div class="add-to-cart">
-  <form method="post" action="{% url 'polls:add_to_cart' item.id %}">
-    {% csrf_token %}
-    <button type="submit" class="cart-button">カートに入れる</button>
-  </form>
-</div>
-
+      <form method="post" action="{% url 'polls:add_to_cart' item.id %}">
+        {% csrf_token %}
+        <button type="submit" class="cart-button">カートに入れる</button>
+      </form>
     </div>
+
   </div>
 </div>
 {% endblock %}
-

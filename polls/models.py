@@ -15,11 +15,7 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)  
-    user = models.ForeignKey( 
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='products'
-    )
+
     def __str__(self):
         return self.name
 
@@ -30,6 +26,7 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = [
         ('farm', 'Farm'),
         ('eat', 'Eat'),
+        ('admin', 'Admin'),
     ]
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     familyname = models.CharField(max_length=50, blank=True) # 姓
@@ -56,8 +53,8 @@ class Inquiry(models.Model):
 
 
 class Item(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,default=1)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, default=1)
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
 
@@ -74,3 +71,19 @@ class Sale(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.total_price}円"
 
+class FarmerRating(models.Model):
+    farmer = models.ForeignKey(
+        CustomUser, 
+        on_delete=models.CASCADE,
+        related_name='ratings'
+    )
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='ratings_given'
+    )
+    score = models.IntegerField()  # 星1〜5
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.farmer.nickname} - {self.score}"
