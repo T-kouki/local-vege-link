@@ -20,13 +20,20 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from .models import Sale
 from django.http import JsonResponse
-from .forms import ProductEditForm 
+from .forms import ProductEditForm ,JudgeResubmitForm
 from django.utils import timezone
 from .models import FarmerRating
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
-from .models import Product, CustomUser, Inquiry
+from .models import Product, CustomUser, Inquiry,FarmJudge
 from django.db.models import Avg
+
+from django.contrib.auth.decorators import user_passes_test, login_required
+
+def admin_required(view_func):
+    return login_required(
+        user_passes_test(lambda u: u.is_authenticated and u.role == 'admin')(view_func)
+    )
 
 
 def sales_manage(request):
@@ -90,7 +97,11 @@ def signup_farm(request):
     if request.method == 'POST':
         form = FarmSignupForm(request.POST, request.FILES) 
         if form.is_valid():
+            user = form.save(commit=False)
+            user.role = 'farm'
             form.save()
+            FarmJudge.objects.create(user=user, document=user.image)
+            messages.success(request, "登録申請が完了しました。管理者の審査をお待ちください。")
             return redirect('login')
     else:
         form = FarmSignupForm()
@@ -254,7 +265,7 @@ def product_detail(request, pk):
     else:
         detail_name = 'no_login/product_detail.html'
     return render(request,detail_name, context)
-@login_required
+
 
 @login_required
 def add_to_cart(request, product_id):
@@ -290,11 +301,6 @@ def add_to_cart(request, product_id):
 
 
 
-@login_required
-def product_manage_view(request):
-    products = Product.objects.filter(user=request.user).order_by('-created_at')
-    context = {'products': products}
-    return render(request, 'farm/product_manage.html', context)
 
 @login_required
 def product_edit_view(request, pk):
@@ -341,71 +347,35 @@ def checkout(request):
             product=item.product,
             quantity=item.quantity,
             total_price=item.product.price * item.quantity,
-            farmer=item.product.user  # 出品者
+            farmer=item.product.user,  # 出品者
+            buyer=request.user  # 購入者を設定
         )
         purchased_items.append(sale)
 
+    # カートアイテムを削除
     cart_items.delete()
 
     return render(request, 'eat/checkout_complete.html', {
         'purchased_items': purchased_items
     })
-from django.shortcuts import render, get_object_or_404
-from .models import CustomUser, Item   # モデル名はあなたの環境に合わせて変更
 
 
-
-def farm_detail(request, pk):
-    # 農家ユーザーを取得
-    farmer = get_object_or_404(CustomUser, pk=pk)
-
-    # その農家の出品商品を取得
-    farmer_items = Item.objects.filter(user=farmer).order_by('-id')
-
-    # 平均評価を取得
-    avg_rating = FarmerRating.objects.filter(farmer=farmer).aggregate(average=Avg('score'))['average']
-
-    context = {
-        'farmer': farmer,
-        'farmer_items': farmer_items,
-        'avg_rating': avg_rating or 0,  # 評価がまだない場合は0に
-    }
-
-    return render(request, 'eat/farm_detail.html', context)
-
-
-def buyer_list_view(request):
-    sales = Sale.objects.filter(farmer=request.user).order_by('-date')
-
-    return render(request, 'eat/buyer_list.html', {
-        'sales': sales
-    })
-
-
-def admin_required(view_func):
-    return user_passes_test(lambda u: u.is_authenticated and u.role == 'admin')(view_func)
-
-
-@login_required
 @admin_required
-def user_list_view(request):
-    products = Product.objects.all().order_by('-created_at')
-    context = {
-        'products': products,
-    }
-    return render(request, 'admin/user_list.html', context)
-
-
-@login_required
-@admin_required
-def product_manage_view(request):
+def admin_product_manage_view(request):
     products = Product.objects.all().order_by('-created_at')
     context = {
         'products': products,
     }
     return render(request, 'admin/product_manage.html', context)
 
+
+
 @login_required
+def farm_product_manage_view(request):
+    products = Product.objects.filter(user=request.user).order_by('-created_at')
+    context = {'products': products}
+    return render(request, 'farm/product_manage.html', context) 
+
 @admin_required
 def user_manage_view(request):
     users = CustomUser.objects.all().order_by('id')
@@ -414,40 +384,111 @@ def user_manage_view(request):
     }
     return render(request, 'admin/user_manage.html', context)
 
-@login_required
 @admin_required
-def contact_view(request):
+def admincontact_view(request):
     inquiries = Inquiry.objects.all().order_by('-created_at')
     context = {
         'inquiries': inquiries,
     }
     return render(request, 'admin/contact_view.html', context)
-@login_required
-def rate_farmer(request, farmer_id):
-    """
-    ログインユーザーが農家に評価（1〜5）を付ける
-    """
-    farmer = get_object_or_404(CustomUser, id=farmer_id, role='farm')
 
-    if request.method == 'POST':
-        score = request.POST.get('score')
-        try:
-            score = int(score)
-            if score < 1 or score > 5:
-                raise ValueError
-        except (ValueError, TypeError):
-            messages.error(request, "評価は1〜5の整数で指定してください。")
+@login_required
+def rate_farmer(request, pk):
+    farmer = get_object_or_404(CustomUser, pk=pk, role='farm')
+
+    if request.method == "POST":
+        score = request.POST.get("score")
+
+        if score is None:
+            messages.error(request, "星を選択してください。")
             return redirect('farm_detail', pk=farmer.id)
 
-        # 既に評価済みなら更新、なければ新規作成
-        rating, created = FarmerRating.objects.update_or_create(
-            farmer=farmer,
-            user=request.user,
-            defaults={'score': score}
-        )
+        score = int(score)
+        if 1 <= score <= 5:
+            FarmerRating.objects.update_or_create(
+                user=request.user,
+                farmer=farmer,
+                defaults={'score': score}
+            )
+            messages.success(request, "評価を送信しました。")
+        else:
+            messages.error(request, "評価は1〜5で選択してください。")
 
-        messages.success(request, f"{farmer.nickname}さんを評価しました！")
-        return redirect('farm_detail', pk=farmer.id)
-
-    # GETアクセスの場合はリダイレクト
     return redirect('farm_detail', pk=farmer.id)
+
+@login_required
+def buyer_list_view(request):
+    # ログイン中ユーザーの購入履歴のみ取得
+    sales = Sale.objects.filter(buyer=request.user).order_by('-date')
+
+    return render(request, 'eat/buyer_list.html', {'sales': sales})
+
+
+@login_required
+@admin_required
+def user_list_view(request):
+    judges = FarmJudge.objects.filter(status__in=['pending', 'resubmit'])
+    return render(request, 'admin/user_list.html', {'judges': judges})
+
+def judge_resubmit(request, token):
+    judge = get_object_or_404(FarmJudge, resubmit_token=token)
+
+    if request.method == "POST":
+        form = JudgeResubmitForm(request.POST, request.FILES, instance=judge)
+        if form.is_valid():
+            judge = form.save(commit=False)
+            judge.status = 'pending'
+            judge.save()
+            messages.success(request, "再提出が完了しました。管理者の再審査をお待ちください。")
+            return redirect('menu') 
+    else:
+        form = JudgeResubmitForm(instance=judge)
+
+    return render(request, 'judge/resubmit.html', {
+        'form': form,
+        'judge': judge
+    })
+
+def admin_judge_action(request, pk, action):
+    judge = get_object_or_404(FarmJudge, pk=pk)
+
+    if action == 'approve':
+        judge.status = 'approved'
+        judge.save()
+    elif action == 'reject':
+        
+        judge.status = 'rejected'
+        judge.save()
+    elif action == 'resubmit':
+        judge.status = 'resubmit'
+        judge.save()
+        
+    return redirect('admin_judge_list')
+
+def sales_manage(request):
+    # ログイン中の農家の売上データを取得
+    sales = Sale.objects.filter(farmer=request.user).order_by('-date')
+
+    context = {
+        'sales': sales
+    }
+    return render(request, 'farm/sales_manage.html', context)
+
+
+def farm_detail(request, pk):
+    # `pk` で指定された農家（CustomUser）を取得
+    farmer = get_object_or_404(CustomUser, pk=pk, role='farm')
+    
+    # その農家が出品した商品を取得
+    farmer_items = Product.objects.filter(user=farmer).order_by('-id')
+
+    # 農家の評価（仮に `FarmerRating` モデルがある場合）
+    avg_rating = FarmerRating.objects.filter(farmer=farmer).aggregate(average=Avg('score'))['average']
+
+    context = {
+        'farmer': farmer,
+        'farmer_items': farmer_items,
+        'avg_rating': avg_rating or 0,  # 評価がない場合は 0 を表示
+    }
+
+    return render(request, 'eat/farm_detail.html', context)

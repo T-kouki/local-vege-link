@@ -1,1 +1,13 @@
-aaa
+<h1>農家申請審査</h1>
+
+{% for judge in judges %}
+<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <p>申請者: {{ judge.user.nickname }}</p>
+    <p>ステータス: {{ judge.get_status_display }}</p>
+    <p>書類: <a href="{{ judge.document.url }}" download>ダウンロード</a></p>
+
+    <a href="{% url 'admin_judge_action' judge.pk 'approve' %}">承認</a>
+    <a href="{% url 'admin_judge_action' judge.pk 'reject' %}">不許可</a>
+    <a href="{% url 'admin_judge_action' judge.pk 'resubmit' %}">再提出待ち</a>
+</div>
+{% endfor %}

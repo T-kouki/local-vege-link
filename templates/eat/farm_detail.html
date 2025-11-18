@@ -1,43 +1,150 @@
-{% extends 'eat_base.html' %}
+{% extends "eat_base.html" %}
+{% load static %}
 
 {% block content %}
-<h1>{{ farmer.username }} さんの詳細ページ</h1>
 
-<h2>出品商品</h2>
-{% if farmer_items %}
-    <ul>
-    {% for item in farmer_items %}
-        <li>{{ item.product.name }} - ¥{{ item.product.price }} × {{ item.quantity }}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>出品商品はありません。</p>
-{% endif %}
+<div class="farmer-detail">
+    <h2>{{ farmer.nickname }} さんのページ</h2>
 
-<hr>
+    <div class="farmer-info">
+        {% if farmer.profile_image %}
+            <img src="{{ farmer.profile_image.url }}" alt="プロフィール画像" class="profile-img">
+        {% else %}
+            <img src="{% static 'default_profile.png' %}" alt="プロフィール画像" class="profile-img">
+        {% endif %}
+        <p><strong>名前：</strong>{{ farmer.familyname }} {{ farmer.lastname }}</p>
+        <p><strong>住所：</strong>{{ farmer.address }}</p>
+        <p><strong>電話：</strong>{{ farmer.phone_number }}</p>
+    </div>
 
-<h2>評価</h2>
-<p>平均評価: {{ avg_rating|floatformat:1 }} / 5</p>
-<p>評価件数: {{ farmer.farmerrating_set.count }} 件</p>
+    <hr>
 
-{% if user.is_authenticated and user != farmer %}
-    <h3>評価を送信する</h3>
-    <form method="post" action="{% url 'polls:rate_farmer' farmer.id %}">
-        {% csrf_token %}
-        <label for="score">評価 (1～5):</label>
-        <select name="score" id="score" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <button type="submit">送信</button>
-    </form>
-{% elif not user.is_authenticated %}
-    <p><a href="{% url 'login' %}">ログイン</a>して評価できます。</p>
-{% else %}
-    <p>自分自身を評価することはできません。</p>
-{% endif %}
+    <!-- ★ 平均評価表示 -->
+    <h3>平均評価</h3>
+    <div class="avg-stars">
+        {% for i in "12345" %}
+            {% if i <= avg_rating|floatformat:0 %}
+                <span class="star active">★</span>
+            {% else %}
+                <span class="star">★</span>
+            {% endif %}
+        {% endfor %}
+        <span>({{ avg_rating|default:0|floatformat:1 }} / 5)</span>
+    </div>
+
+    <hr>
+
+    <!-- ★ 評価フォーム -->
+    <h3>あなたの評価を送信</h3>
+
+    {% if request.user.is_authenticated %}
+        <form action="{% url 'rate_farmer' farmer.id %}" method="POST">
+            {% csrf_token %}
+
+            <div class="star-rating">
+                {% for i in "54321" %}
+                    <input type="radio" id="star{{ i }}" name="score" value="{{ i }}">
+                    <label for="star{{ i }}">★</label>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="submit-btn">評価を送信</button>
+        </form>
+    {% else %}
+        <p>評価するには <a href="{% url 'login' %}">ログイン</a> してください。</p>
+    {% endif %}
+
+    <hr>
+
+    <!-- ★ 農家の商品一覧（Product に修正済み） -->
+    <h3>{{ farmer.nickname }} さんの商品一覧</h3>
+
+    <div class="product-list">
+        {% for item in farmer_items %}
+            <div class="product-card">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-img">
+                {% else %}
+                    <img src="{% static 'no_image.png' %}" alt="商品画像" class="product-img">
+                {% endif %}
+                <h4>{{ item.name }}</h4>
+                <p>{{ item.price }}円</p>
+            </div>
+        {% empty %}
+            <p>まだ商品がありません。</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+/* プロフィール画像 */
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* 星の平均評価表示 */
+.avg-stars .star {
+    font-size: 28px;
+    color: #ccc;
+}
+.avg-stars .star.active {
+    color: gold;
+}
+
+/* 星評価フォーム */
+.star-rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    font-size: 35px;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    color: #ccc;
+    cursor: pointer;
+}
+.star-rating input:checked ~ label {
+    color: gold;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
+
+/* 商品カード */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.product-card {
+    width: 180px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.product-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+/* ボタン */
+.submit-btn {
+    margin-top: 10px;
+    padding: 6px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+.submit-btn:hover {
+    background-color: #218838;
+}
+</style>
 
 {% endblock %}

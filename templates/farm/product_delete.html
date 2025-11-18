@@ -18,6 +18,6 @@
 <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">削除する</button>
-    <p><a href="{% url 'product_manage' %}" class="btn btn-secondary">キャンセル</a></p>
+    <p><a href="{% url 'farm_product_manage' %}" class="btn btn-secondary">キャンセル</a></p>
 </form>
 {% endblock %}

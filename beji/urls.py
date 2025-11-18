@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     # 🔹 トップページを未ログインメニュー画面に設定
     path("", views.menu_view, name="menu"),
-   
+
     path("polls/", include("polls.urls")),
     path("admin/", admin.site.urls),
     path("menu/", views.menu_view, name="menu"), 

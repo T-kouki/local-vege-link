@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils import timezone
+import uuid
 
 class Product(models.Model):
     user = models.ForeignKey(
@@ -67,23 +68,38 @@ class Sale(models.Model):
     total_price = models.IntegerField()  # price × quantity
     date = models.DateTimeField(auto_now_add=True)
     farmer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='purchases')
     def __str__(self):
         return f"{self.product.name} - {self.total_price}円"
 
 class FarmerRating(models.Model):
-    farmer = models.ForeignKey(
-        CustomUser, 
-        on_delete=models.CASCADE,
-        related_name='ratings'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='ratings')
+    score = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)  
+
+    class Meta:
+        unique_together = ('user', 'farmer')
+
+class FarmJudge(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True)
+    document = models.ImageField(upload_to='judge/', blank=True, null=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', '審査中'),
+            ('approved', '承認'),
+            ('rejected', '不許可'),
+            ('resubmit', '再提出待ち'),
+        ],
+        default='pending'
     )
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='ratings_given'
-    )
-    score = models.IntegerField()  # 星1〜5
+    reason = models.TextField(blank=True)
+    resubmit_token = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.farmer.nickname} - {self.score}"
+        return f"{self.user.nickname} の申請 ({self.get_status_display()})"
+
+
+        

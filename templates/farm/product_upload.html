@@ -1,11 +1,16 @@
-<!-- polls/templates/registration/product_upload.html -->
+{% extends 'farm_base.html' %}
+{% load static %}
 
-<h2>商品アップロード</h2>
+{% block title %}商品アップロード{% endblock %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">アップロード</button>
-</form>
-
-<a href="{% url 'farm_menu' %}">戻る</a>
+{% block content %}
+<main>
+    <h1>商品の掲示</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">アップロード</button>
+        </form>
+    <a href="{% url 'farm_menu' %}">戻る</a>
+</main>
+{% endblock %}

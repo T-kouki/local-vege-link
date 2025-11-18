@@ -6,6 +6,7 @@ from .models import Inquiry
 from django import forms
 from .models import Sale 
 from django.forms.widgets import ClearableFileInput
+from .models import FarmJudge
 
 class CustomClearableFileInput(ClearableFileInput):
     initial_text = '' 
@@ -155,3 +156,8 @@ class ProductEditForm(forms.ModelForm):
             return int(price)
         except ValueError:
             raise forms.ValidationError("価格は数字で入力してください。")
+
+class JudgeResubmitForm(forms.ModelForm):
+    class Meta:
+        model = FarmJudge
+        fields = ['document']

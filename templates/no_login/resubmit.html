@@ -1,0 +1,9 @@
+<h1>再提出フォーム</h1>
+
+<p>現在の書類: <a href="{{ judge.document.url }}" download>ダウンロード</a></p>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">再提出</button>
+</form>

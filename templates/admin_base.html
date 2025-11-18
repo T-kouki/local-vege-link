@@ -3,27 +3,77 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>システム管理者ページ</title>
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <title>{% block title %}管理者ページ{% endblock %}</title>
+
+    <style>
+        /* ===== ヘッダー全体 ===== */
+        header {
+            display: flex;
+            justify-content: space-between;   /* 左右に配置 */
+            align-items: center;
+            padding: 15px 30px;
+            border-bottom: 1px solid #aaa;
+            background: #fff;
+        }
+
+        /* ===== ボックス（左と右の共通スタイル） ===== */
+        .header-box {
+            border: 2px solid #555;
+            padding: 15px 25px;
+            border-radius: 6px;
+            background: #fff;
+            color: #333;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            line-height: 1.4;
+            display: inline-block;
+        }
+
+        /* ===== ログアウトボタン ===== */
+        .logout-btn {
+            background: #fff;
+            color: #333;
+            border: 2px solid #555;
+            cursor: pointer;
+            padding: 15px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .header-box:hover,
+        .logout-btn:hover {
+            background: #f4f4f4;
+        }
+
+        /* メイン領域 */
+        main {
+            padding: 30px;
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-    <h2>システム管理者ページ</h2>
 
-    <nav>
-      
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">ログアウト</button>
-        </form>
-    </nav>
+    <!-- 左側：ロゴボックス -->
+    <div class="header-box" onclick="location.href='/polls/admin_menu/'">
+        システム管理者用<br>ページ
+    </div>
+
+    <!-- 右側：ログアウトボックス -->
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">
+            ログアウト
+        </button>
+    </form>
+
 </header>
 
 <main>
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </main>
 
 </body>
