@@ -1,1 +1,37 @@
-aaa
+{% extends "admin_base.html" %}
+{% block title %}出品管理{% endblock %}
+
+{% block content %}
+<h1 style="text-align:center; margin-bottom:20px;">出品管理</h1>
+
+{% if products %}
+    {% for product in products %}
+        <div style="border:1px solid #999; padding:10px; margin-bottom:10px; display:flex; align-items:center;">
+
+            <!-- 商品画像 -->
+            <div style="width:80px; height:80px; border:1px solid #ccc; display:flex; justify-content:center; align-items:center; margin-right:20px;">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="商品画像" style="max-width:100%; max-height:100%;">
+                {% else %}
+                    <span style="color:#999; font-size:12px;">商品画像</span>
+                {% endif %}
+            </div>
+
+            <!-- 商品情報 -->
+            <div style="flex-grow:1; text-align:left;">
+                <p style="margin:0; text-align:left;">商品名: {{ product.name }}</p>
+                <p style="margin:0; text-align:left;">商品価格: ¥{{ product.price }}</p>
+                <p style="margin:0; text-align:left;">出品者: {{ product.user.nickname }}</p>
+            </div>
+
+            <!-- 削除ボタン -->
+            <div style="display:flex; flex-direction:column; gap:5px; margin-left:10px;">
+                <button onclick="location.href='{% url 'admin_product_delete' product.id %}'"
+                        style="padding:5px 10px;">削除</button>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="text-align:center;">商品が出品されていません。</p>
+{% endif %}
+{% endblock %}

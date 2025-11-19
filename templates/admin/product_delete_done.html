@@ -1,0 +1,11 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block title %}削除完了{% endblock %}
+
+{% block content %}
+<main>
+    <h2>商品の削除が完了しました。</h2>
+    <p><a href="{% url 'admin_product_manage' %}" class="btn btn-secondary">商品管理へ</a></p>
+</main>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'no_login_base.html' %}
+{% load static %}
+
+{% block title %}カート{% endblock %}
+
+{% block content %}
+<h2>カート</h2> 
+
+<div id="cart-items">
+    {% if cart_items %}
+        {% for item in cart_items %}
+        <div class="cart-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width:100px; height:auto;">
+            {% else %}
+            <img src="{% static 'images/default_product.png' %}" alt="no image" style="width:100px; height:auto;">
+            {% endif %}
+            <div>
+                <strong>{{ item.product.name }}</strong><br>
+                ¥{{ item.product.price }} × {{ item.quantity }}<br>
+                <a href="{% url 'remove_from_cart' item.id %}" style="color:red;">削除</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <h3>合計: ¥{{ total }}</h3>
+
+    {% else %}
+        <p>カートに商品がありません</p>
+    {% endif %}
+</div>
+ <a href="{% url 'checkout' %}"> <button style="margin-top:20px;">購入手続きへ進む</button> </a>
+{% endblock %}

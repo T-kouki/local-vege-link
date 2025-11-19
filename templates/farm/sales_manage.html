@@ -1,72 +1,35 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>売上管理</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #fff;
-        }
+{% extends 'farm_base.html' %}
+{% block content %}
 
-        h1 {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+<div class="container mt-5">
+    <h2 class="text-center mb-4">売上管理</h2>
 
-        .sale-card {
-            border: 1px solid #000;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .sale-card img {
-            width: 80px;
-            height: 80px;
-            border: 1px solid #000;
-            object-fit: cover;
-        }
-
-        .sale-details {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-size: 14px;
-        }
-
-        .sale-details span {
-            display: inline-block;
-            min-width: 100px;
-        }
-    </style>
-</head>
-<body>
-    <h1>売上管理</h1>
-
-    {% for sale in sales %}
-    <div class="sale-card">
-        {% if sale.product.image %}
-            {{ sale.product.image.url }}
-        {% else %}
-            no-image.png
-        {% endif %}
-        <div class="sale-details">
-            <span>商品画像</span>
-            <span>商品名: {{ sale.product.name }}</span>
-            <span>商品価格: ¥{{ sale.product.price }}</span>
-            <span>販売手数料: ¥{{ sale.fee }}</span>
-            <span>送料: ¥{{ sale.shipping }}</span>
-            <span>税率: {{ sale.tax }}%</span>
-            <span>販売利益: ¥{{ sale.profit }}</span>
-            <span>取引完了日: {{ sale.completed_date }}</span>
+    {% if sales_list %}
+        {% for sale in sales_list %}
+        <div class="card mb-4 p-3">
+            <div class="row">
+                <div class="col-3 text-center">
+                    {% if sale.product.image %}
+                        {{ sale.product.image.url }}
+                    {% else %}
+                        <div style="width:150px;height:150px;border:1px solid #ccc;"></div>
+                    {% endif %}
+                </div>
+                <div class="col-9">
+                    <p><strong>商品名:</strong> {{ sale.product.name }}</p>
+                    <p><strong>価格:</strong> {{ sale.price }}円</p>
+                    <p><strong>手数料:</strong> {{ sale.fee }}円</p>
+                    <p><strong>送料:</strong> {{ sale.shipping }}円</p>
+                    <p><strong>税率:</strong> {{ sale.tax }}%</p>
+                    <p><strong>販売方法:</strong> {{ sale.method }}</p>
+                    <p><strong>取引完了日:</strong> {{ sale.completed_at|date:"Y-m-d" }}</p>
+                </div>
+            </div>
         </div>
-    </div>
-    {% endfor %}
-</body>
-</html>
+        {% endfor %}
+    {% else %}
+        <p class="text-center">売上データがありません。</p>
+    {% endif %}
+</div>
+
+{% endblock %}

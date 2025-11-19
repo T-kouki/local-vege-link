@@ -6,33 +6,21 @@
 
 {% if users %}
     {% for user in users %}
-        <div style="border:1px solid #999; padding:15px; margin-bottom:10px; display:flex; align-items:center;">
+        <div style="border:1px solid #999; padding:15px; margin-bottom:10px; display:flex; align-items:center; border-radius:8px;">
 
-            <!-- プロフィール画像 -->
-            <div style="width:80px; height:80px; border:1px solid #ccc; display:flex; justify-content:center; align-items:center; margin-right:20px;">
-                {% if user.profile_image %}
-                    <img src="{{ user.profile_image.url }}" alt="プロフィール画像" style="max-width:100%; max-height:100%;">
-                {% else %}
-                    <span style="color:#999; font-size:12px;">画像なし</span>
-                {% endif %}
-            </div>
+
 
             <!-- ユーザー情報 -->
             <div style="flex-grow:1;">
-
-                <p style="margin:0;">表示名：{{ user.nickname }}</p>
-                <p style="margin:0;">氏名：{{ user.familyname }}</p>
-                <p style="margin:0;">住所：{{ user.familyname }}</p>
-                <p style="margin:0;">電話番号：{{ user.email }}</p>
-                <p style="margin:0;">権限（role）：{{ user.get_role_display }}</p>
-
+                <p style="margin:3px 0;"><strong>表示名：</strong>{{ user.nickname }}</p>
+                <p style="margin:3px 0;"><strong>氏名：</strong>{{ user.familyname }} {{ user.lastname }}</p>
+                <p style="margin:3px 0;"><strong>住所：</strong>{{ user.address }}</p>
+                <p style="margin:3px 0;"><strong>電話番号：</strong>{{ user.phone_number }}</p>
+                <p style="margin:3px 0;"><strong>メールアドレス：</strong>{{ user.email }}</p>
             </div>
 
-            <!-- 操作ボタン -->
+            <!-- 削除ボタン -->
             <div style="display:flex; flex-direction:column; gap:10px; margin-left:20px;">
-                <button onclick="location.href='{% url 'user_edit' user.id %}'"
-                        style="padding:8px 15px;">変更</button>
-
                 <button onclick="location.href='{% url 'user_delete' user.id %}'"
                         style="padding:8px 15px;">削除</button>
             </div>

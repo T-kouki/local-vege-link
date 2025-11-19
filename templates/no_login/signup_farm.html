@@ -82,6 +82,9 @@
         <div class="form-group">
             <label for="{{ form.image.id_for_label }}">販売実績が確認できる書類</label>
             {{ form.image }}
+            {% if form.image.errors %}
+                <div class="error-message">{{ form.image.errors }}</div>
+            {% endif %}
         </div>
 
         <div class="form-group">

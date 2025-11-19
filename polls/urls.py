@@ -21,8 +21,10 @@ urlpatterns = [
     path("admin_menu/", views.admin_menu_view, name="admin_menu"),
     path("product_upload/", views.farm_product_upload, name="product_upload"),
     path("edit_profile/", views.profile_edit, name="edit_profile"),
-    path('contact', views.contact_view, name='contact'),
-    path("contact_view/", views.admincontact_view, name="contact_view"),
+    path('eat/contact', views.eat_contact_view, name='eat_contact'),
+    path('farm/contact/', views.farm_contact_view, name='farm_contact'),
+    path("contact_list/", views.contact_list_view, name="contact_list"),
+    path('admin/contact/<int:pk>/', views.admin_contact_detail_view, name='admin_contact_detail'),
     path('search/', views.search_view, name='search'),
     path("products/", views.product_list_view, name="product_list"),
     path("product_history/", views.product_history_view, name="product_history"),
@@ -32,6 +34,8 @@ urlpatterns = [
     path("admin/product_manage/", views.admin_product_manage_view, name="admin_product_manage"),
     path('product/<int:pk>/edit/', views.product_edit_view, name='product_edit'),
     path('product/<int:pk>/delete/', views.product_delete_view, name='product_delete'),
+    path('admin/product/<int:pk>/delete/', views.admin_product_delete_view, name='admin_product_delete'),
+    path("user/<int:user_id>/delete/", views.user_delete_view, name="user_delete"),
     path('sales_manage/', views.sales_manage, name='sales_manage'),
     path('product_edit/', views.product_edit_view, name='product_edit'),
     #path('sales_report/', views.sales_report, name='sales_report'),
@@ -44,8 +48,7 @@ urlpatterns = [
     path('farm/<int:pk>/rate/', views.rate_farmer, name='rate_farmer'),
     path("judge/resubmit/<uuid:token>/", views.judge_resubmit, name="judge_resubmit"),
     path("admin/judge_action/<int:pk>/<str:action>/", views.admin_judge_action, name="admin_judge_action"),
-    
-
-]   
+]
+   
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

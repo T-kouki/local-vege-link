@@ -1,7 +1,26 @@
-{% extends "eat_base.html" %}
-{% block title %}購入者メニュー{% endblock %}
+{% extends 'eat_base.html' %}
+{% load static %}
+
+{% block title %} 未ログインメニュー {% endblock %}
 
 {% block content %}
-<h2>購入者メニュー</h2>
-<p>{{ user.nickname }} さん、ようこそ！</p>
+<main>
+    <div class="products-container">
+        {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.pk %}">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
+                    {% else %}
+                        <img src="{% static 'default_product.png' %}" alt="No Image" width="200">
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                </a>
+                <p>¥{{ product.price }}</p>
+            </div>
+        {% empty %}
+            <p>商品はまだ登録されていません。</p>
+        {% endfor %}
+    </div>
+</main>
 {% endblock %}

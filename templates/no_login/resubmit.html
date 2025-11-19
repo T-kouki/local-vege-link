@@ -1,9 +1,43 @@
-<h1>再提出フォーム</h1>
+{% extends 'no_login_base.html' %}
+{% load static %}
 
-<p>現在の書類: <a href="{{ judge.document.url }}" download>ダウンロード</a></p>
+{% block title %}書類再提出{% endblock %}
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">再提出</button>
-</form>
+{% block content %}
+<main class="resubmit-container">
+    <h1 class="resubmit-title">書類の再提出</h1>
+
+    <p>申請者: {{ judge.user.nickname }}</p>
+    <p>メールアドレス: {{ judge.user.email }}</p>
+
+    <!-- 現在の提出書類を表示 -->
+    <div class="current-document">
+        <h3>現在の提出書類</h3>
+
+        {% if judge.document %}
+            <p>
+                <a href="{{ judge.document.url }}" target="_blank">
+                    {{ judge.document.name }}
+                </a>
+            </p>
+        {% else %}
+            <p>現在の書類はありません</p>
+        {% endif %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="resubmit-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.document.id_for_label }}">新しい書類を選択</label>
+            {{ form.document }}
+            {% if form.document.errors %}
+                <div class="error-message">{{ form.document.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="submit-button">再提出する</button>
+    </form>
+</main>
+{% endblock %}
+    

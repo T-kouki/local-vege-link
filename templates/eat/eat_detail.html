@@ -19,6 +19,7 @@
     <h1>{{ item.name }}</h1>
     <h2>¥{{ item.price }}</h2>
 
+    <!-- 農家情報 -->
     <div class="farmer-info">
       <div class="farmer-profile">
         {% if item.user.profile_image %}
@@ -30,21 +31,33 @@
 
       <div class="farmer-name">
         <p>
-          <a href="{% url 'polls:farm_detail' item.user.id %}">
-            {{ item.user.nickname }}
-          </a>
+          {% if item.user.id %}
+            <!-- 農家詳細ページへのリンク -->
+            <a href="{% url 'farm_detail' pk=item.user.id %}">
+              {{ item.user.nickname }}
+            </a>
+          {% else %}
+            <span>{{ item.user.nickname }}</span>
+          {% endif %}
         </p>
       </div>
 
       <div class="farmer-rating">
-        
+        <!-- 平均評価（仮定） -->
+        {% if avg_rating %}
+          <p>評価: {{ avg_rating }} / 5</p>
+        {% else %}
+          <p>評価なし</p>
+        {% endif %}
       </div>
     </div>
 
+    <!-- 商品説明 -->
     <div class="item-description">
       <p>{{ item.description|linebreaksbr }}</p>
     </div>
 
+    <!-- カートに入れる -->
     <div class="add-to-cart">
       <form method="post" action="{% url 'polls:add_to_cart' item.id %}">
         {% csrf_token %}

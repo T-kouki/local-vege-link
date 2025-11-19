@@ -1,0 +1,14 @@
+{% extends "admin_base.html" %}
+
+{% block title %}ユーザー削除確認{% endblock %}
+
+{% block content %}
+<h1>ユーザー削除確認</h1>
+<p>本当に {{ user.nickname }} を削除しますか？</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">削除する</button>
+    <a href="{% url 'user_manage' %}">キャンセル</a>
+</form>
+{% endblock %}

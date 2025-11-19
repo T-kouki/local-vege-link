@@ -64,6 +64,12 @@ class FarmSignupForm(UserCreationForm):
             'profile_image': 'プロフィール画像'
         }
 
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if not image:
+            raise forms.ValidationError("販売実績が確認できる書類をアップロードしてください")
+        return image
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data['email']  # ログインをメールで行う場合
@@ -88,8 +94,10 @@ class ProfileEditForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'profile_image': forms.ClearableFileInput(attrs={'class': 'form-control'}), 
+            # 🔥 ClearableFileInput をやめる（バグの原因）
+            'profile_image': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
 
 class InquiryForm(forms.ModelForm):
     class Meta:
@@ -161,3 +169,12 @@ class JudgeResubmitForm(forms.ModelForm):
     class Meta:
         model = FarmJudge
         fields = ['document']
+        widgets = {
+            'document': forms.FileInput(attrs={'class': 'file-input'})
+        }
+        labels = {
+            'document': '新しい書類を選択'
+        }
+
+
+

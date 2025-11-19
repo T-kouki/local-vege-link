@@ -1,13 +1,20 @@
+{% extends 'admin_base.html' %} 
+{% block content %}
 <h1>農家申請審査</h1>
 
 {% for judge in judges %}
 <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
     <p>申請者: {{ judge.user.nickname }}</p>
     <p>ステータス: {{ judge.get_status_display }}</p>
-    <p>書類: <a href="{{ judge.document.url }}" download>ダウンロード</a></p>
+    {% if judge.document %}
+        <p>書類: <a href="{{ judge.document.url }}" download>ダウンロード</a></p>
+    {% else %}
+        <p>書類: <span style="color:red;">（未提出）</span></p>
+    {% endif %}
 
     <a href="{% url 'admin_judge_action' judge.pk 'approve' %}">承認</a>
     <a href="{% url 'admin_judge_action' judge.pk 'reject' %}">不許可</a>
     <a href="{% url 'admin_judge_action' judge.pk 'resubmit' %}">再提出待ち</a>
 </div>
 {% endfor %}
+{% endblock %}

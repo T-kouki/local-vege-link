@@ -1,0 +1,9 @@
+{% extends "admin_base.html" %}
+
+{% block title %}ユーザー削除完了{% endblock %}
+
+{% block content %}
+<h1>ユーザー削除完了</h1>
+<p>ユーザー {{ username }} の削除が完了しました。</p>
+<a href="{% url 'user_manage' %}">ユーザー管理へ戻る</a>
+{% endblock %}

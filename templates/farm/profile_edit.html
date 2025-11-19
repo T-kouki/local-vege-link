@@ -1,11 +1,65 @@
-<!-- polls/templates/registration/profile_edit.html -->
+{% extends 'farm_base.html' %}
+{% load static %}
 
-<h2>プロフィール編集</h2>
+{% block title %}プロフィール編集{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">保存</button>
-</form>
+{% block content %}
+<main class="edit-profile-container">
 
-<a href="{% url 'farm_menu' %}">戻る</a>
+    <h1 style="text-align:center; margin-bottom:20px;">プロフィール編集</h1>
+
+    <form method="post" enctype="multipart/form-data" class="edit-form">
+        {% csrf_token %}
+
+        <!-- ニックネーム -->
+        <div class="form-group">
+            <label for="id_nickname">表示される名前</label>
+            {{ form.nickname }}
+            {% if form.nickname.errors %}
+                <p class="error">{{ form.nickname.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- メールアドレス -->
+        <div class="form-group">
+            <label for="id_email">メールアドレス</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <p class="error">{{ form.email.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- 住所 -->
+        <div class="form-group">
+            <label for="id_address">住所</label>
+            {{ form.address }}
+            {% if form.address.errors %}
+                <p class="error">{{ form.address.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- 電話番号 -->
+        <div class="form-group">
+            <label for="id_phone_number">電話番号</label>
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}
+                <p class="error">{{ form.phone_number.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- プロフィール画像 -->
+        <div class="form-group">
+            <label for="id_profile_image">プロフィール画像</label>
+            {{ form.profile_image }}
+            {% if user.profile_image %}
+                <label for="id_profile_image_now">現在のプロフィール画像</label>
+                <img src="{{ user.profile_image.url }}" alt="プロフィール画像" class="preview-image">
+            {% endif %}
+        </div>
+
+        <button type="submit" class="submit-button">保存する</button>
+
+    </form>
+
+</main>
+{% endblock %}

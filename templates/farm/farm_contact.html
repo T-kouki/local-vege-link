@@ -1,0 +1,93 @@
+{% extends 'farm_base.html' %}
+
+{% block content %}
+
+<style>
+    .contact-container {
+        width: 70%;
+        margin: 0 auto;
+        text-align: center;
+        font-family: sans-serif;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin-bottom: 40px;
+    }
+
+    .form-label {
+        text-align: left;
+        font-size: 14px;
+        margin-bottom: 5px;
+        margin-top: 20px;
+    }
+
+    /* タイトル欄 */
+    .title-input {
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #444;
+        font-size: 16px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* 説明欄 */
+    .description-input {
+        width: 100%;
+        height: 250px;
+        padding: 20px;
+        border-radius: 25px;
+        border: 1px solid #444;
+        font-size: 16px;
+        text-align: center;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+
+    .submit-btn {
+        margin-top: 40px;
+    }
+
+    .submit-btn button {
+        padding: 15px 40px;
+        font-size: 16px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        background: white;
+        cursor: pointer;
+    }
+</style>
+
+<div class="contact-container">
+
+    <h1>お問い合わせ</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="roll" value="farm">
+
+        <!-- タイトル -->
+        <div class="form-label">タイトル</div>
+        <input type="text" name="title" class="title-input"
+               value="{{ form.title.value|default:'' }}">
+
+        <!-- 説明欄 -->
+        <div class="form-label">説明欄</div>
+        <textarea name="description" class="description-input">{{ form.description.value|default:'' }}</textarea>
+
+        <div class="submit-btn">
+            <button type="submit">送信ボタン</button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

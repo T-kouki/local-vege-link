@@ -82,7 +82,13 @@ class FarmerRating(models.Model):
         unique_together = ('user', 'farmer')
 
 class FarmJudge(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='judge'
+    )
     document = models.ImageField(upload_to='judge/', blank=True, null=True)
     status = models.CharField(
         max_length=20,
@@ -101,5 +107,3 @@ class FarmJudge(models.Model):
     def __str__(self):
         return f"{self.user.nickname} の申請 ({self.get_status_display()})"
 
-
-        

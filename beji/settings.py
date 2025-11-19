@@ -147,3 +147,7 @@ AUTH_USER_MODEL = 'polls.CustomUser'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+#開発用にバックエンドしてるから本番は消す
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

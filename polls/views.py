@@ -27,8 +27,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from .models import Product, CustomUser, Inquiry,FarmJudge
 from django.db.models import Avg
-
+from django.core.mail import send_mail
+from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, login_required
+
+#11/18 14:05 今だけ入れる
+from .models import FarmJudge
 
 def admin_required(view_func):
     return login_required(
@@ -50,16 +54,26 @@ def index(request):
 
 def menu(request):
     return render(request, 'no_login/menu.html')
+@login_required
 def cart(request):
-
-    cart_items = Item.objects.filter(user=request.user)  # ログインユーザーのカート商品
+    # ログインユーザーのカート商品を取得
+    cart_items = Item.objects.filter(user=request.user)
     total = sum(item.product.price * item.quantity for item in cart_items)  # 合計金額
 
+    # ユーザーのロールに応じて異なるテンプレートを選択
+    if request.user.role == 'eat':
+        template_name = 'eat/eatcart.html'  # eat ロールなら eat_cart テンプレート
+    else:
+        template_name = 'no_login/cart.html'  # その他のロールなら no_login/cart テンプレート
+
+    # コンテキストを渡してレンダリング
     context = {
         'cart_items': cart_items,
         'total': total,
     }
-    return render(request, 'eat/eatcart.html', context)
+
+    return render(request, template_name, context)
+
 def logout_confirm_view(request):
     # ロールに応じてテンプレートを切り替え
     user = request.user
@@ -123,24 +137,52 @@ def login_view(request):
 
         user = None
         if user_obj:
-            # authenticate()はusernameを使うので、CustomUser.usernameを渡す
             user = authenticate(request, username=user_obj.username, password=password)
 
         if user is not None:
-            login(request, user)
 
+            # ★農家の場合：judge を1件だけ取得
             if user.role == 'farm':
-                return redirect('farm_menu')
-            elif user.role == 'eat':
+
+                judge = user.judge.first()  # ← これが重要！！！
+
+                if judge is None:
+                    messages.error(request, "農家申請が未完了です。まず申請してください。")
+                    return render(request, 'no_login/login.html')
+
+                # --- 状態チェック ---
+                if judge.status == 'pending':
+                    messages.info(request, "現在審査中です。承認をお待ちください。")
+                    return render(request, 'no_login/login.html')
+
+                elif judge.status == 'rejected':
+                    messages.error(request, "審査に不合格です。お問い合わせください。")
+                    return render(request, 'no_login/login.html')
+
+                elif judge.status == 'resubmit':
+                    messages.warning(request, "書類の再提出が必要です。メールに記載のリンクから再提出してください。")
+                    return render(request, 'no_login/login.html')
+
+                elif judge.status == 'approved':
+                    login(request, user)
+                    return redirect('farm_menu')
+
+            # ★購入者 OK
+            if user.role == 'eat':
+                login(request, user)
                 return redirect('eat_menu')
-            elif user.role == 'admin':
+
+            # ★管理者 OK
+            if user.role == 'admin':
+                login(request, user)
                 return redirect('admin_menu')
-            else:
-                return redirect('menu')
+
+            login(request, user)
+            return redirect('menu')
 
         else:
             messages.error(request, "メールアドレスまたはパスワードが誤りです。")
-            return redirect('login')  # ★ リダイレクトすることでF5連打でもフォーム再送信されない
+            return render(request, 'no_login/login.html')
 
     return render(request, 'no_login/login.html')
 
@@ -180,33 +222,48 @@ def admin_menu_view(request):
 @login_required
 def profile_edit(request):
     user = request.user
+
     if request.method == 'POST':
-        form = ProfileEditForm(request.POST, instance=user)
+        form = ProfileEditForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            form.save()
+            user = form.save()
             update_session_auth_hash(request, user)
-            return redirect('farm_menu')  # 編集後にリダイレクトするページ
+            return redirect('farm_menu')
     else:
         form = ProfileEditForm(instance=user)
-
+    
     return render(request, 'farm/profile_edit.html', {'form': form})
-# polls/views.py
 
 @require_POST
 def logout_view(request):
     logout(request)
     return redirect('menu')
-def contact_view(request):
+
+def eat_contact_view(request):
+    
     if request.method == 'POST':
         form = InquiryForm(request.POST)
         if form.is_valid():
-            form.save()  # DBに保存
-            messages.success(request, 'お問い合わせを受け付けました。ありがとうございます！')
-            return redirect('polls:contact')
+            form.save()
+            messages.success(request, 'お問い合わせありがとうございます。')
+            return redirect('eat_contact')
     else:
         form = InquiryForm()
+    return render(request, 'eat/eat_contact.html', {'form': form})
 
-    return render(request, 'eat/contact.html', {'form': form})
+def farm_contact_view(request):
+    if request.method == 'POST':
+        form = InquiryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'お問い合わせありがとうございます（農家用）。')
+            # リダイレクトせずにテンプレートを返す
+            return render(request, 'farm/farm_contact.html', {'form': form})
+    else:
+        form = InquiryForm()
+    return render(request, 'farm/farm_contact.html', {'form': form})
+
+
 
 def search_view(request):
     query = request.GET.get('q')  # フォームの入力値を取得
@@ -227,17 +284,8 @@ def search_view(request):
     return render(request, search_name, context)
 
  
-def contact_view(request):
-    if request.method == 'POST':
-        form = InquiryForm(request.POST)
-        if form.is_valid():
-            form.save()  # DBに保存
-            messages.success(request, 'お問い合わせを受け付けました。ありがとうございます！')
-            return redirect('polls:contact')
-    else:
-        form = InquiryForm()
 
-    return render(request, 'eat/contact.html', {'form': form})
+
 def product_list_view(request):
     # Productテーブルの全レコードを取得
     products = Product.objects.all()
@@ -265,6 +313,7 @@ def product_detail(request, pk):
     else:
         detail_name = 'no_login/product_detail.html'
     return render(request,detail_name, context)
+
 
 
 @login_required
@@ -317,17 +366,7 @@ def product_edit_view(request, pk):
 
     return render(request, 'farm/product_edit.html', {'form': form, 'product': product})
 
-@login_required
-def product_delete_view(request, pk):
-    product = get_object_or_404(Product, pk=pk, user=request.user)
 
-    if request.method == "POST":
-        
-        product_name = product.name
-        product.delete()
-        return render(request, 'farm/product_delete_done.html', {'product_name': product_name})
-    
-    return render(request, 'farm/product_delete.html', {'product': product})
 def remove_from_cart(request, item_id):
     
     item = get_object_or_404(Item, id=item_id)
@@ -385,12 +424,12 @@ def user_manage_view(request):
     return render(request, 'admin/user_manage.html', context)
 
 @admin_required
-def admincontact_view(request):
+def contact_list_view(request):
     inquiries = Inquiry.objects.all().order_by('-created_at')
     context = {
         'inquiries': inquiries,
     }
-    return render(request, 'admin/contact_view.html', context)
+    return render(request, 'admin/contact_list.html', context)
 
 @login_required
 def rate_farmer(request, pk):
@@ -444,7 +483,7 @@ def judge_resubmit(request, token):
     else:
         form = JudgeResubmitForm(instance=judge)
 
-    return render(request, 'judge/resubmit.html', {
+    return render(request, 'no_login/resubmit.html', {
         'form': form,
         'judge': judge
     })
@@ -462,17 +501,25 @@ def admin_judge_action(request, pk, action):
     elif action == 'resubmit':
         judge.status = 'resubmit'
         judge.save()
+
+        #以下メール
+        subject = "再提出のお願い"
+        message = f"{judge.user.nickname}さん\n\n書類に修正が必要です。以下のリンクから再提出してください。\n\n"
+        message += f"http://127.0.0.1:8000/polls/judge/resubmit/{judge.resubmit_token}/"
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [judge.user.email]
+        send_mail(subject, message, from_email, recipient_list)
         
-    return redirect('admin_judge_list')
+    return redirect('user_list')
 
 def sales_manage(request):
     # ログイン中の農家の売上データを取得
     sales = Sale.objects.filter(farmer=request.user).order_by('-date')
-
     context = {
         'sales': sales
     }
     return render(request, 'farm/sales_manage.html', context)
+
 
 
 def farm_detail(request, pk):
@@ -492,3 +539,39 @@ def farm_detail(request, pk):
     }
 
     return render(request, 'eat/farm_detail.html', context)
+
+@admin_required
+def user_delete_view(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+
+    if request.method == "POST":
+        user.delete()
+        return redirect('user_manage')
+
+    return render(request, "admin/user_delete.html", {"user": user})
+
+@login_required
+def product_delete_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == "POST":
+        product.delete()
+        return redirect('farm_product_manage')
+
+    return render(request, 'farm/product_delete.html', {'product': product})
+
+
+@admin_required
+def admin_product_delete_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == "POST":
+        product.delete()
+        return redirect('admin_product_manage')
+    
+    return render(request, 'admin/product_delete.html', {'product': product})
+
+@admin_required
+def admin_contact_detail_view(request, pk):
+    inquiry = get_object_or_404(Inquiry, pk=pk)
+    return render(request, 'admin/contact_detail.html', {'inquiry': inquiry})

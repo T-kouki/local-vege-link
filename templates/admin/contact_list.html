@@ -1,0 +1,23 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<h1 style="text-align:center; margin-bottom:20px;">問い合わせ閲覧</h1>
+
+<div class="inquiry-list">
+    {% for inquiry in inquiries %}
+    <div class="inquiry-item" style="border:1px solid #ccc; padding:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+        <div class="inquiry-info">
+            <p><strong>表示名:</strong> {{ inquiry.name }}</p>
+            <p><strong>タイトル:</strong> {{ inquiry.title }}</p>
+        </div>
+        <div class="inquiry-action">
+            <a href="{% url 'admin_contact_detail' inquiry.pk %}">
+                <button type="button">問い合わせ詳細</button>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <p>問い合わせはありません。</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@ body {
     margin: 0;
     background-color: #f8f8f8;
 }
- 
+
 /* ====== ヘッダー部分 ====== */
 header {
     display: flex;
@@ -13,19 +13,19 @@ header {
     border-bottom: 1px solid #ccc;
     padding: 10px 20px;
 }
- 
+
 .logo {
     border: 1px solid #000;
     padding: 10px 20px;
     cursor: pointer;
 }
- 
+
 .nav-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
- 
+
 .nav-button {
     border: 1px solid #000;
     padding: 10px 15px;
@@ -34,23 +34,23 @@ header {
     text-decoration: none;
     color: black;
 }
- 
+
 .nav-button:hover {
     background-color: #eee;
 }
- 
+
 /* ====== ハンバーガーメニュー ====== */
 .menu {
     position: relative;
 }
- 
+
 .menu-button {
     border: 1px solid #000;
     padding: 10px 15px;
     background-color: #f9f9f9;
     cursor: pointer;
 }
- 
+
 .dropdown {
     display: none;
     position: absolute;
@@ -62,7 +62,7 @@ header {
     width: 200px;
     z-index: 10;
 }
- 
+
 .dropdown a {
     display: block;
     padding: 12px;
@@ -70,11 +70,11 @@ header {
     color: #000;
     text-decoration: none;
 }
- 
+
 .dropdown a:hover {
     background-color: #f0f0f0;
 }
- 
+
 /* ====== メインコンテンツ ====== */
 main {
     margin: 20px;
@@ -84,4 +84,125 @@ main {
     text-align: center;
     font-size: 18px;
 }
- 
+
+/* 入力ブロック全体を中央に配置 */
+.form-group {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 20px;
+    text-align: left;
+}
+
+/* ラベルのスタイル */
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+/* 入力欄のスタイル */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group textarea,
+.form-group select,
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* 商品一覧コンテナをグリッド表示に */
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 20px;
+}
+
+/* 商品カードのスタイル */
+.product-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    max-width: 180px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 商品画像 */
+.product-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* 商品名 */
+.product-card h3 {
+    font-size: 16px;
+    margin: 10px 0 5px;
+}
+
+/* 商品価格 */
+.product-card p {
+    font-size: 14px;
+    color: #333;
+}
+
+.products-container p {
+    grid-column: 1 / -1;   /* グリッド全幅を占有 */
+    text-align: center;   /* 中央寄せ */
+    font-size: 18px;
+}
+
+/* ====== プロフィール編集ページ ====== */
+
+/* 編集フォームを中央 & 見やすく */
+.edit-profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #fff;
+    border: 1px solid #aaa;
+}
+
+/* タイトル */
+.edit-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* ラベル・入力欄のレイアウトは .form-group が共通利用できる */
+
+/* エラーメッセージ */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* 保存ボタン */
+.submit-button {
+    display: block;
+    width: 200px;
+    padding: 12px;
+    margin: 30px auto 0 auto;
+    border: 1px solid #000;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-button:hover {
+    background-color: #eee;
+}

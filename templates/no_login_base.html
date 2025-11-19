@@ -32,8 +32,8 @@
 
         {% comment %} 検索後の画面を作ってないので一旦メニュー画面に飛ばす {% endcomment %}
         <form class="search-form" action="{% url 'search' %}" method="get">
-            <input type="text" name="q" placeholder="検索ワードを入力" />
-            <button type="submit">☆検索☆</button>
+            <input type="text" name="a" placeholder="検索ワードを入力" />
+            <button type="submit">検索</button>
         </form>
 
         <div class="nav-buttons">

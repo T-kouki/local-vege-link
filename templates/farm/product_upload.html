@@ -5,12 +5,45 @@
 
 {% block content %}
 <main>
-    <h1>商品の掲示</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">アップロード</button>
-        </form>
-    <a href="{% url 'farm_menu' %}">戻る</a>
+    <h1 style="text-align:center; margin-bottom:20px;">商品の掲示</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- 商品名 -->
+        <div class="form-group">
+            <label for="id_name">商品名</label>
+            {% if form.name.errors %}
+                <div class="error-message">{{ form.name.errors.0 }}</div>
+            {% endif %}
+            <input type="text" name="name" id="id_name" value="{{ form.name.value|default:'' }}">
+        </div>
+
+        <!-- 価格 -->
+        <div class="form-group">
+            <label for="id_price">価格</label>
+            {% if form.price.errors %}
+                <div class="error-message">{{ form.price.errors.0 }}</div>
+            {% endif %}
+            <input type="text" name="price" id="id_price" value="{{ form.price.value|default:'' }}">
+        </div>
+
+        <!-- 説明欄 -->
+        <div class="form-group">
+            <label for="id_description">説明欄</label>
+            <textarea name="description" id="id_description">{{ form.description.value|default:'' }}</textarea>
+        </div>
+
+        <!-- 商品画像 -->
+        <div class="form-group">
+            <label for="id_image">商品画像</label>
+            <input type="file" name="image" id="id_image">
+        </div>
+
+        <!-- 出品ボタン -->
+        <button type="submit" class="submit-button">出品する</button>
+
+    </form>
 </main>
 {% endblock %}
+
